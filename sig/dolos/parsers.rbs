@@ -1,0 +1,5 @@
+module Dolos
+  module Parsers
+    def string: (String)-> Parser[String]
+  end
+end

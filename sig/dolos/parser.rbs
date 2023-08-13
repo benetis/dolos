@@ -1,0 +1,10 @@
+module Dolos
+  class Parser[A]
+    attr_accessor parser_proc: ^(ParserState) -> Result[A]
+    def initialize: (^(ParserState) -> Result[A]) -> Parser[A]
+    def flat_map: [B](Parser[A], ^(A) -> Parser[B])-> Parser[B]
+    def run: (String) -> Result[A]
+    def run_with_state: (ParserState) -> Result[A]
+
+  end
+end

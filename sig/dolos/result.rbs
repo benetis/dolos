@@ -1,0 +1,15 @@
+module Dolos
+  class Result[A]
+
+  end
+
+  class Success[A] < Result[A]
+    attr_reader length: Integer
+    attr_reader value: A
+  end
+
+  class Failure < Result[bot]
+    attr_reader committed: bool
+    attr_reader message: String
+  end
+end

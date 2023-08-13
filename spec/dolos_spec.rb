@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe Dolos do
-  it "has a version number" do
-    expect(Dolos::VERSION).not_to be nil
-  end
+  include Dolos
+  describe 'run' do
 
-  it "does something useful" do
-    expect(false).to eq(true)
+    it 'should match a string and return success' do
+      parser = string('hello')
+      result = parser.run('hello')
+
+      expect(result.success?).to be_truthy
+    end
+
+
   end
 end

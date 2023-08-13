@@ -1,0 +1,6 @@
+module Dolos
+  class StringIOWrapper
+    attr_reader io: StringIO
+    attr_reader offset: Integer
+  end
+end

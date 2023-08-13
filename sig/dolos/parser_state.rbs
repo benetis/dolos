@@ -1,0 +1,6 @@
+module Dolos
+  class ParserState
+    attr_reader input: Dolos::StringIOWrapper
+
+  end
+end
