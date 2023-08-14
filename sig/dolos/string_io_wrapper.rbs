@@ -2,7 +2,14 @@ module Dolos
   class StringIOWrapper
     attr_reader io: StringIO
     attr_reader offset: Integer
+    attr_reader backup: Integer
+
+    def advance: (Integer)-> void
+
+    def mark_offset: -> void
 
     def matches?: (String) -> bool
+
+    def rollback: -> void
   end
 end
