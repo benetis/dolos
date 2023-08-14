@@ -88,7 +88,17 @@ module Dolos
     end
     alias_method :>>, :product
 
-
+    def choice(other_parser)
+      Parser.new do |state|
+        result = run_with_state(state)
+        if result.success?
+          result
+        else
+          other_parser.run_with_state(state)
+        end
+      end
+    end
+    alias_method :|, :choice
 
   end
 end

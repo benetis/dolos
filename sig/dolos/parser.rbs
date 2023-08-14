@@ -3,6 +3,7 @@ module Dolos
     attr_accessor parser_proc: ^(ParserState) -> Result[A]
     def initialize: (^(ParserState) -> Result[A]) -> Parser[A]
     def capture!: -> Parser[A]
+    def choice: [B](Parser[B])-> Parser[A | B]
     def flat_map: [B](Parser[A], ^(A) -> Parser[B]) -> Parser[B]
     def flatten: -> Parser[A]
     def map: [B](^(A) -> B) -> Parser[B]
