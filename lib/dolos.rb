@@ -37,13 +37,11 @@ module Dolos
       end
     end
 
-    # can be another version which directly calls map on captures
     def map(&block)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
           Success.new(result.value, result.length, block.call(result.captures))
-          # Success.new(result.value, result.length, result.captures.map(&block))
         else
           result
         end

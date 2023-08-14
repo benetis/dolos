@@ -106,6 +106,15 @@ RSpec.describe Dolos do
       expect(result.captures).to eq([1, 2, 3, 4])
     end
 
+    it 'maps over groups to add and then multiply' do
+      first = (string("1") >> string("2")).capture!.map { |digit| digit.map(&:to_i).reduce(:+) } # 3
+      second = (string("3") >> string("4")).capture!.map { |digit| digit.map(&:to_i).reduce(:+) } # 7
+      parser = (first >> second).map { |value| value.reduce(:*) } # 21
+
+      result = parser.run("1234")
+      expect(result.captures).to eq(21)
+    end
+
   end
 
   describe 'capture' do
