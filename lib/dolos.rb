@@ -54,7 +54,7 @@ module Dolos
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
-          Success.new(block.call(result.value), result.length)
+          Success.new(block.call(result.value), result.length, result.captures)
         else
           result
         end
@@ -65,7 +65,7 @@ module Dolos
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
-          new_parser = block.call(result.value)
+          new_parser = block.call(result.value, result.captures)
           new_state = state.dup
           new_state.input.advance(result.length)
           new_parser.run_with_state(new_state)
@@ -75,24 +75,21 @@ module Dolos
       end
     end
 
+    def flatten
+      map do |captures|
+        captures.flatten
+      end
+    end
+
     def product(other_parser)
-      flat_map do |value1|
+      flat_map do |value1, capture1|
         other_parser.map_value do |value2|
           [value1, value2]
-        end.map do |captures|
-          [value1, captures].flatten
+        end.map do |capture2|
+          [capture1, capture2].flatten
         end
       end
     end
-    # def product(other_parser)
-    #   flat_map do |value1|
-    #     other_parser.map_value do |value2|
-    #       [value1, value2]
-    #     end.map do |captures|
-    #       [value1, captures].delete_if { |x| x.empty? }
-    #     end
-    #   end
-    # end
     alias_method :>>, :product
 
 

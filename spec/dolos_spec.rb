@@ -91,20 +91,19 @@ RSpec.describe Dolos do
     end
 
     it 'maps over parsers and converts them to ints' do
-      parser = (string("1") >> string("2") >> string("3")).capture!.map { |value| value.map(&:to_i) }
+      parser = (string("1") >> string("2") >> string("3")).capture!.flatten.map { |value| value.map(&:to_i) }
 
       result = parser.run("123")
       expect(result.captures).to eq([1, 2, 3])
     end
 
     it 'maps over groups and converts to ints' do
-      first = (string("1") >> string("2")).capture!
-      second = (string("3") >> string("4")).capture!
+      first = (string("1") >> string("2")).capture!.map { |value| value.map(&:to_i) }
+      second = (string("3") >> string("4")).capture!.map { |value| value.map(&:to_i) }
       parser = (first >> second)
 
       result = parser.run("1234")
-      # expect(result.value).to eq([["2", "3"], ["1", "3"]])
-      expect(result.captures).to eq([["1", "2"], ["3", "4"]])
+      expect(result.captures).to eq([1, 2, 3, 4])
     end
 
   end
@@ -127,9 +126,9 @@ RSpec.describe Dolos do
     it 'captures the result of two parsers but not third' do
       loud_hello = (string('hello') >> string('world')).capture!
 
-      parser = loud_hello >> string('!')
+      parser = loud_hello >> string('!') >> string('!')
 
-      result = parser.run('helloworld!')
+      result = parser.run('helloworld!!')
       expect(result.captures).to eq(['hello', 'world'])
     end
 

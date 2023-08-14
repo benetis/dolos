@@ -16,17 +16,15 @@ module Dolos
 
     def capture!
       if value.is_a?(Array)
-        last_value = [value.last]
+        value.each do |v|
+          captures << v
+        end
       else
-        last_value = [value]
+        captures << value
       end
 
-      Success.new(value, length, captures.concat(last_value).flatten)
+      Success.new(value, length, captures)
     end
-
-    # def capture!
-    #   Success.new(value, length, captures.concat([value]).flatten)
-    # end
 
     def inspect
       "Success(value: '#{value}',length: #{length}, capture: '#{captures}')"
