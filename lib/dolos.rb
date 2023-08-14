@@ -26,7 +26,31 @@ module Dolos
       result
     end
 
+    def capture!
+      Parser.new do |state|
+        result = run_with_state(state)
+        if result.success?
+          result.capture!
+        else
+          result
+        end
+      end
+    end
+
+    # can be another version which directly calls map on captures
     def map(&block)
+      Parser.new do |state|
+        result = run_with_state(state)
+        if result.success?
+          Success.new(result.value, result.length, block.call(result.captures))
+          # Success.new(result.value, result.length, result.captures.map(&block))
+        else
+          result
+        end
+      end
+    end
+
+    def map_value(&block)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
@@ -53,11 +77,22 @@ module Dolos
 
     def product(other_parser)
       flat_map do |value1|
-        other_parser.map do |value2|
-          [value1, value2].flatten
+        other_parser.map_value do |value2|
+          [value1, value2]
+        end.map do |captures|
+          [value1, captures].flatten
         end
       end
     end
+    # def product(other_parser)
+    #   flat_map do |value1|
+    #     other_parser.map_value do |value2|
+    #       [value1, value2]
+    #     end.map do |captures|
+    #       [value1, captures].delete_if { |x| x.empty? }
+    #     end
+    #   end
+    # end
     alias_method :>>, :product
 
 

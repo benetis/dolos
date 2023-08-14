@@ -4,6 +4,7 @@ module Dolos
   end
 
   class Success[A] < Result[A]
+    attr_reader captures: Array[untyped]
     attr_reader length: Integer
     attr_reader value: A
 
