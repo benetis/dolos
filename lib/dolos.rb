@@ -26,32 +26,38 @@ module Dolos
       result
     end
 
-    def flat_map(other_parser)
+    def map(&block)
       Parser.new do |state|
-        result1 = run_with_state(state)
-        case result1
-        when Success
-          new_state = state.dup
-          new_state.input.advance(result1.length)
-          result2 = other_parser.run_with_state(new_state)
-          case result2
-          when Success
-            Success.new(yield(result1.value, result2.value), result1.length + result2.length)
-          else
-            result2
-          end
+        result = run_with_state(state)
+        if result.success?
+          Success.new(block.call(result.value), result.length)
         else
-          result1
+          result
         end
       end
     end
-    def product(other_parser)
-      flat_map(other_parser) do |value1, value2|
-        Success.new([value1, value2], value1.length + value2.length)
+
+    def flat_map(&block)
+      Parser.new do |state|
+        result = run_with_state(state)
+        if result.success?
+          new_parser = block.call(result.value)
+          new_state = state.dup
+          new_state.input.advance(result.length)
+          new_parser.run_with_state(new_state)
+        else
+          result
+        end
       end
     end
 
-
+    def product(other_parser)
+      flat_map do |value1|
+        other_parser.map do |value2|
+          [value1, value2].flatten
+        end
+      end
+    end
     alias_method :>>, :product
 
 

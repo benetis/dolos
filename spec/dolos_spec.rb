@@ -18,8 +18,27 @@ RSpec.describe Dolos do
       parser = string('hello') >> string('world')
       result = parser.run('helloworld')
 
+      expect(result.success?).to be_truthy
+    end
 
-      pp result
+    it 'should combine three parsers' do
+      parser = string('hello') >> string('world') >> string('!')
+      result = parser.run('helloworld!')
+
+      expect(result.success?).to be_truthy
+    end
+
+    it 'should combine four parsers' do
+      parser = string('hello') >> string('world') >> string('!') >> string('!')
+      result = parser.run('helloworld!!')
+
+      expect(result.success?).to be_truthy
+    end
+
+    it 'should combine five parsers' do
+      parser = string('hello') >> string(' ') >> string('world') >> string(',') >> string(' and universe')
+      result = parser.run('hello world, and universe')
+
       expect(result.success?).to be_truthy
     end
 
