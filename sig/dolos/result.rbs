@@ -6,10 +6,16 @@ module Dolos
   class Success[A] < Result[A]
     attr_reader length: Integer
     attr_reader value: A
+
+    def failure?: -> bool
+    def success?: -> bool
   end
 
   class Failure < Result[bot]
     attr_reader committed: bool
     attr_reader message: String
+
+    def failure?: -> bool
+    def success?: -> bool
   end
 end

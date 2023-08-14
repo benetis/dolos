@@ -26,12 +26,11 @@ module Dolos
 
     def matches?(str)
       read = io.read(str.length)
+      io.seek(offset)
 
       if read.nil?
-        return false
+        false
       else
-        advance(read.length)
-
         read == str
       end
     end

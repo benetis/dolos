@@ -10,7 +10,19 @@ RSpec.describe Dolos do
 
       expect(result.success?).to be_truthy
     end
+  end
 
+  describe 'product' do
+
+    it 'should combine two parsers' do
+      parser = string('hello') >> string('world')
+      result = parser.run('helloworld')
+
+
+      pp result
+      expect(result.success?).to be_truthy
+    end
 
   end
+
 end

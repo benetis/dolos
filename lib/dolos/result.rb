@@ -37,6 +37,10 @@ module Dolos
       "Failure(#{message.inspect}, #{committed})"
     end
 
+    def map
+      self
+    end
+
     def success?
       false
     end
