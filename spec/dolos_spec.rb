@@ -257,4 +257,69 @@ RSpec.describe Dolos do
 
   end
 
+  describe 'zero_or_more' do
+    context 'when success' do
+      it 'matches zero' do
+        parser = string('hello').zero_or_more
+        result = parser.run('')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([])
+      end
+
+      it 'matches one' do
+        parser = string('hello').zero_or_more
+        result = parser.run('hello')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(['hello'])
+      end
+
+      it 'matches many' do
+        parser = string('a').zero_or_more
+        result = parser.run('aaaaaaaaaaaaaaa')
+
+        expect(result.success?).to be_truthy
+        expect(result.value.join).to eq("aaaaaaaaaaaaaaa")
+      end
+    end
+
+    context 'when product' do
+      it 'matches many' do
+        parser = c("start") >> c("1").zero_or_more
+        result = parser.run("start111end")
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(["start", ["1", "1", "1"]])
+      end
+
+      it 'many and then product' do
+        parser = c("1").zero_or_more >> c("end")
+        result = parser.run("111end")
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([["1", "1", "1"], "end"])
+      end
+
+      it 'many and then product' do
+        parser = c("start") >> c("yo").zero_or_more >> c("end")
+        result = parser.run("startyoyoyoyoend")
+        expect(result.success?).to be_truthy
+        expect(result.value.flatten(1)).to eq(["start", ["yo", "yo", "yo", "yo"], "end"])
+      end
+    end
+
+    context 'when choice' do
+      it 'matches many' do
+        parser = (c("1") | c("2")).zero_or_more
+        result = parser.run("121212")
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(["1", "2", "1", "2", "1", "2"])
+      end
+
+    end
+
+  end
+
 end

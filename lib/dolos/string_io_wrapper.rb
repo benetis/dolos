@@ -41,6 +41,13 @@ module Dolos
       io.seek(offset)
     end
 
+    def peek(bytesize)
+      current_position = io.pos
+      data = io.read(bytesize)
+      io.seek(current_position)
+      data
+    end
+
   end
 
 end
