@@ -21,9 +21,7 @@ module Dolos
     end
 
     def run_with_state(state)
-      result = parser_proc.call(state)
-
-      result
+      parser_proc.call(state)
     end
 
     def capture!

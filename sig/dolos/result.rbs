@@ -8,6 +8,8 @@ module Dolos
     attr_reader length: Integer
     attr_reader value: A
 
+    def capture!: -> Success[A]
+
     def failure?: -> bool
     def success?: -> bool
   end
@@ -17,6 +19,9 @@ module Dolos
     attr_reader message: String
 
     def failure?: -> bool
+
+    def map: [B](^(bot) -> B) -> Result[B]
+
     def success?: -> bool
   end
 end
