@@ -221,4 +221,33 @@ RSpec.describe Dolos do
     end
   end
 
+  describe 'associativity' do
+    context '>>' do
+      it 'is left associative' do
+        parser = string('hello') >> string('world') >> string('!')
+        result = parser.run('helloworld!')
+
+        expect(result.success?).to be_truthy
+      end
+
+      it 'is right associative' do
+        parser = string('hello') >> (string('world') >> string('!'))
+        result = parser.run('helloworld!')
+
+        expect(result.success?).to be_truthy
+      end
+    end
+
+    context '|' do
+      it 'is left associative' do
+        parser = string('hello') | string('world') | string('!')
+        result = parser.run('helloworld!')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq('hello')
+      end
+    end
+
+  end
+
 end
