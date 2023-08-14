@@ -154,6 +154,25 @@ RSpec.describe Dolos do
 
       expect(result.captures).to eq(['HELLO', 'WORLD'])
     end
+
+    context 'when failure' do
+      it 'captures the result of a parser' do
+        parser = string('hello').capture!
+        result = parser.run('Xhello')
+
+        expect(result.failure?).to be_truthy
+        expect(result.captures).to eq([])
+      end
+
+      it 'captures the result of two parsers' do
+        parser = (string('hello') >> string('world')).capture!
+        result = parser.run('Xhelloworld')
+
+        expect(result.failure?).to be_truthy
+        expect(result.captures).to eq([])
+      end
+
+    end
   end
 
 end

@@ -62,5 +62,9 @@ module Dolos
     def failure?
       true
     end
+
+    def captures
+      []
+    end
   end
 end

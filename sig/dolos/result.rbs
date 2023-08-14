@@ -18,6 +18,8 @@ module Dolos
     attr_reader committed: bool
     attr_reader message: String
 
+    def captures: -> []
+
     def failure?: -> bool
 
     def map: [B](^(bot) -> B) -> Result[B]
