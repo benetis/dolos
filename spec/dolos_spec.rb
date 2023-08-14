@@ -175,7 +175,7 @@ RSpec.describe Dolos do
     end
   end
 
-  describe 'or' do
+  describe 'choice' do
     it 'matches the first parser' do
       parser = string('hello') | string('world')
       result = parser.run('hello')
@@ -195,6 +195,13 @@ RSpec.describe Dolos do
       result = parser.run('!')
 
       expect(result.failure?).to be_truthy
+    end
+
+    it 'handles failing parser before success and continues' do
+      parser = (string('hello') | string('world') | string('!')) >> string(" the ") >> string('end') | string('beginning')
+      result = parser.run('! the beginning')
+
+      expect(result.success?).to be_truthy
     end
 
     context 'captures' do
