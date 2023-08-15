@@ -12,14 +12,16 @@ It does not use exceptions and instead returns a result object.
 Library is composable and concise.
 
 ```ruby
+require 'dolos'
 include Dolos
 
+ws = c(" ")
 parser = c("Parsers") >> ws >> c("are") >> ws >> c("great!")
-parser.parse("Parsers are great!") # <Result::Success>
+parser.run("Parsers are great!") # <Result::Success>
 
 greeter = c("Hello")
 greet_and_speak = greeter >> c(", ") >> parser
-greet_and_speak.parse("Hello, Parsers are great!") # <Result::Success>
+greet_and_speak.run("Hello, Parsers are great!") # <Result::Success>
 ```
 
 ### Letter address parser example
