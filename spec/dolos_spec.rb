@@ -430,14 +430,14 @@ RSpec.describe Dolos do
       it 'fails, because repeat exactly 2 times' do
         parser = c("1").rep(2) >> c("end")
         result = parser.run("111end")
-        pp result
+
         expect(result.failure?).to be_truthy
       end
 
       it 'fails, because n_min is 2' do
         parser = c("1").rep(2) >> c("end")
         result = parser.run("1end")
-        pp result
+
         expect(result.failure?).to be_truthy
       end
     end
@@ -464,7 +464,7 @@ RSpec.describe Dolos do
       it 'fails, because n_min is 2' do
         parser = c("1").repeat(n_min: 2) >> c("end")
         result = parser.run("1end")
-        pp result
+
         expect(result.failure?).to be_truthy
       end
     end

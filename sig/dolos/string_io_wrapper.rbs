@@ -10,6 +10,8 @@ module Dolos
 
     def matches?: (String) -> bool
 
+    def peek: -> String?
+
     def rollback: -> void
   end
 end
