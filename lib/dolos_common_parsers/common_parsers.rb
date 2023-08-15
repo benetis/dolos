@@ -7,7 +7,7 @@ module Dolos
     end
 
     def digit
-      regex(/\d/).map(&:to_i)
+      regex(/\d/).capture!.map { |capt| capt.map(&:to_i) }
     end
 
     def digits

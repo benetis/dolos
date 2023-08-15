@@ -16,11 +16,11 @@ RSpec.describe Dolos::CommonParsers do
 
   describe 'digit' do
     it 'parses a digit' do
-      parser = digit
+      parser = digit.capture!
       result = parser.run('1')
 
       expect(result.success?).to be_truthy
-      expect(result.value).to eq(1)
+      expect(result.captures).to eq([1])
     end
   end
 
