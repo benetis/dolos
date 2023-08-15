@@ -160,6 +160,29 @@ RSpec.describe Dolos::Parsers do
         expect(result.value).to eq('š')
       end
     end
+
+    context 'with combinators' do
+      it 'parses a single character and chains' do
+        parser = any_char >> any_char >> any_char
+        result = parser.run('šįėę')
+
+        expect(result.success?).to be_truthy
+        expect(result.value.flatten).to eq(['š', 'į', 'ė'])
+      end
+
+      it 'captures a date' do
+        year = c("Year: ") >> any_char.rep(4).map(&:join).capture!
+        month = c("Month: ") >> any_char.rep(2).map(&:join).capture!
+        day = c("Day: ") >> any_char.rep(2).map(&:join).capture!
+        sep = c(", ")
+
+        parser = year >> sep >> month >> sep >> day
+
+        result = parser.run('Year: 2019, Month: 01, Day: 01')
+        expect(result.success?).to be_truthy
+        expect(result.captures).to eq(['2019', '01', '01'])
+      end
+    end
   end
 
 
