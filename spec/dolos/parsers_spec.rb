@@ -145,6 +145,33 @@ RSpec.describe Dolos::Parsers do
         expect(result.success?).to be_truthy
         expect(result.value).to eq(['ąąąą', 'žžžž'])
       end
+
+      it 'works with repeat' do
+        ws = regex(/\s/)
+        parser = ws.rep0
+        result = parser.run('   ')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([' ', ' ', ' '])
+      end
+
+      it 'works with repeat and product' do
+        ws = regex(/\s/)
+        parser = ws.rep >> c("123")
+        result = parser.run('   123')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([[' ', ' ', ' '], '123'])
+      end
+
+      it 'doesnt overconsume' do
+        ws = regex(/\s/)
+        parser = ws.rep >> c("123")
+        result = parser.run('   123  ')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([[' ', ' ', ' '], '123'])
+      end
     end
   end
 

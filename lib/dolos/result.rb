@@ -48,7 +48,11 @@ module Dolos
     end
 
     def inspect
-      "Failure(#{message.inspect}, #{committed})"
+      [
+        "Failure",
+        "message: #{message}",
+        "committed: #{committed}"
+      ].join("\n")
     end
 
     def map

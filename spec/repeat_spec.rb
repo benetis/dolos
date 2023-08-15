@@ -36,6 +36,14 @@ RSpec.describe Dolos do
         expect(result.success?).to be_truthy
         expect(result.value.join).to eq("123")
       end
+
+      it 'matches all whitespace' do
+        parser = c(" ").rep0 >> c("hmm") >> string('hello').capture!
+        result = parser.run('   hmmhello')
+
+        expect(result.success?).to be_truthy
+        expect(result.captures).to eq(["hello"])
+      end
     end
 
     context 'when product' do

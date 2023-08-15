@@ -58,16 +58,19 @@ module Dolos
 
     def matches_regex?(pattern)
       current_position = io.pos
+
       remaining_data = io.read
       io.seek(current_position)
 
-      if (match_data = remaining_data.match(pattern))
+      if (match_data = remaining_data.match(/\A#{pattern}/))
         matched_string = match_data[0]
+        io.seek(current_position + matched_string.bytesize)
         return matched_string
       end
 
       nil
     end
+
 
 
   end

@@ -3,7 +3,11 @@
 module Dolos
   module CommonParsers
     def ws
-      regex(/\s+/)
+      regex(/\s/)
+    end
+
+    def eol
+      regex(/\n|\r\n|\r/)
     end
 
     # Capture as String and convert to integer
@@ -18,6 +22,10 @@ module Dolos
 
     def alpha_num
       regex(/[a-zA-Z0-9]/)
+    end
+
+    def alpha
+      regex(/[a-zA-Z]/)
     end
   end
 end
