@@ -16,7 +16,7 @@ RSpec.describe 'should parse address on a letter' do
   let(:alpha_with_lt) { char_in("ąčęėįšųūžĄČĘĖĮŠŲŪŽ") | alpha }
   let(:first_name) { alpha_with_lt.rep.capture!.map(&:join) }
   let(:last_name) { alpha_with_lt.rep.capture!.map(&:join) }
-  let(:first_line) { ws.rep0 >> honorific >> first_name >> ws >> last_name >> eol }
+  let(:name_line) { ws.rep0 >> honorific >> first_name >> ws >> last_name >> eol }
 
   let(:company_type) { c("AB") }
   let(:quote_open) { c("„") }
@@ -25,9 +25,17 @@ RSpec.describe 'should parse address on a letter' do
   let(:company_info) { company_type >> ws.rep0 >> quote_open >> company_name >> quote_close }
   let(:second_line) { ws.rep0 >> company_info >> eol }
 
+  let(:street_name) { char_while(->(char) { !char.match(/\d/) }).capture!.map(&:first).map { |s| { street: s.strip } } }
+  let(:building) { digits.capture!.map(&:first).map { |s| { building: s.strip } } }
+  let(:address_line) { ws.rep0 >> street_name >> building >> eol }
+
+  let(:postcode) { digits.capture!.map(&:join).map { |s| { postcode: s.strip } } }
+  let(:city) { alpha_with_lt.rep.capture!.map(&:join).map { |s| { city: s.strip } } }
+  let(:city_line) { ws.rep0 >> postcode >> ws >> city >> eol }
+
   context 'first line' do
     it 'captures first and last name' do
-      result = first_line.run(letter)
+      result = name_line.run(letter)
 
       expect(result.success?).to be_truthy
       expect(result.captures).to eq(["Vardeniui", "Pavardeniui"])
@@ -36,11 +44,31 @@ RSpec.describe 'should parse address on a letter' do
 
   context 'second line' do
     it 'captures company name' do
-      both_lines = first_line >> second_line
+      both_lines = name_line >> second_line
       result = both_lines.run(letter)
 
       expect(result.success?).to be_truthy
-      expect(result.captures).to eq(["Vardeniui", "Pavardeniui", "Lietuvos Paštas"])
+      expect(result.captures.last).to eq("Lietuvos Paštas")
+    end
+  end
+
+  context 'third line' do
+    it 'captures street name and number' do
+      three_lines = name_line >> second_line >> address_line
+      result = three_lines.run(letter)
+
+      expect(result.success?).to be_truthy
+      expect(result.captures.last(2)).to eq([{ :street => "Totorių g." }, { :building => "8" }])
+    end
+  end
+
+  context 'fourth line' do
+    it 'captures postcode and city' do
+      four_lines = name_line >> second_line >> address_line >> city_line
+      result = four_lines.run(letter)
+
+      expect(result.success?).to be_truthy
+      expect(result.captures.last(2)).to eq([{:postcode=>"01121"}, {:city=>"Vilnius"}])
     end
   end
 
