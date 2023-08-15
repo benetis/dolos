@@ -58,6 +58,22 @@ RSpec.describe Dolos::Parsers do
         expect(result.success?).to be_truthy
         expect(result.value).to eq('123')
       end
+
+      it 'converts to integer' do
+        parser = regex(/\d/).capture!.map { |capt| capt.map(&:to_i) }
+        result = parser.run('1')
+
+        expect(result.success?).to be_truthy
+        expect(result.captures).to eq([1])
+      end
+
+      it 'converts to integer' do
+        parser = regex(/\d+/).capture!.map { |capt| capt.map(&:to_i) }
+        result = parser.run('123')
+
+        expect(result.success?).to be_truthy
+        expect(result.captures).to eq([123])
+      end
     end
 
     context 'product' do
