@@ -11,7 +11,8 @@ module Dolos
     def product: [B](Parser[A]) -> Parser[B]
     def run: (String) -> Result[A]
     def run_with_state: (ParserState) -> Result[A]
-
+    def repeat: (Integer, Integer)-> Parser[Array[A]]
     def zero_or_more: -> Parser[Array[A]]
+    def one_or_more: (Integer?) -> Parser[Array[A]]
   end
 end

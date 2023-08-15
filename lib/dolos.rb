@@ -8,6 +8,7 @@ require_relative "dolos/parsers"
 
 module Dolos
   include Parsers
+
   class Parser
 
     attr_accessor :parser_proc
@@ -86,6 +87,7 @@ module Dolos
         end
       end
     end
+
     alias_method :>>, :product
 
     def choice(other_parser)
@@ -100,27 +102,48 @@ module Dolos
     end
     alias_method :|, :choice
 
-    def zero_or_more
+    # rep0         # 0 or more
+    # rep          # 1 or more
+    # rep(n = 2)   # exactly 2
+    # repeat(n_min: 2, n_max: 4) # 2 to 4
+    # repeat(n_min: 2) # 2 or more
+    def repeat(n_min:, n_max: Float::INFINITY)
       Parser.new do |state|
         results = []
-        total_length = 0
+        count = 0
 
-        loop do
-          result = run_with_state(state)
+        while count < n_max
+          result = run_with_state(state.dup)
 
-          if result.failure?
-            break
-          end
+          break if result.failure?
 
           results << result.value
-          total_length += result.length
           state.input.advance(result.length)
+          count += 1
         end
 
-        Success.new(results, 0) # Passing 0, because we already advanced the input and flatmap will advance it again
+        if count < n_min
+          Failure.new("Expected parser to match at least #{n_min} times but matched only #{count} times", false)
+        else
+          Success.new(results, 0) # Passing 0, because we already advanced the input and flatmap will advance it again
+        end
       end
     end
+
+    def zero_or_more
+      repeat(n_min: 0, n_max: Float::INFINITY)
+    end
     alias_method :rep0, :zero_or_more
+
+    def one_or_more(exactly = nil)
+      if exactly.nil?
+        repeat(n_min: 1, n_max: Float::INFINITY)
+      else
+        repeat(n_min: exactly, n_max: exactly)
+      end
+    end
+    alias_method :rep, :one_or_more
+
 
   end
 end

@@ -65,7 +65,6 @@ RSpec.describe Dolos do
 
   end
 
-
   describe 'map' do
     it 'maps over one parser' do
       parser = string('hello').map_value { |value| value.upcase }
@@ -360,6 +359,133 @@ RSpec.describe Dolos do
       end
     end
 
+  end
+
+  describe 'one_or_more' do
+    it 'matches one' do
+      parser = string('hello').rep
+      result = parser.run('hello')
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq(['hello'])
+    end
+
+    it 'matches many' do
+      parser = string('a').rep
+      result = parser.run('aaaaaaaaaaaaaaa')
+
+      expect(result.success?).to be_truthy
+      expect(result.value.join).to eq("aaaaaaaaaaaaaaa")
+    end
+
+    it 'matches with alias' do
+      parser = (c('1') | c('2') | c('3')).rep
+      result = parser.run('231')
+
+      expect(result.success?).to be_truthy
+      expect(result.value.join).to eq("231")
+    end
+
+    it 'must at least match one' do
+      parser = string('hello').rep
+      result = parser.run('')
+
+      expect(result.success?).to be_falsey
+    end
+
+    it 'must at least match one but choice returns values' do
+      parser = (c('1') | c('2') | c('3')).rep | c('still')
+      result = parser.run('still')
+
+      expect(result.success?).to be_truthy
+    end
+
+    context 'when product' do
+      it 'matches many' do
+        parser = c("start") >> c("1").rep
+        result = parser.run("start111end")
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(["start", ["1", "1", "1"]])
+      end
+
+      it 'many and then product' do
+        parser = c("1").rep >> c("end")
+        result = parser.run("111end")
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([["1", "1", "1"], "end"])
+      end
+
+      it 'many and then product' do
+        parser = c("start") >> c("yo").rep >> c("end")
+        result = parser.run("startyoyoyoyoend")
+        expect(result.success?).to be_truthy
+        expect(result.value.flatten(1)).to eq(["start", ["yo", "yo", "yo", "yo"], "end"])
+      end
+    end
+
+    context 'when n!=1' do
+
+      it 'fails, because repeat exactly 2 times' do
+        parser = c("1").rep(2) >> c("end")
+        result = parser.run("111end")
+        pp result
+        expect(result.failure?).to be_truthy
+      end
+
+      it 'fails, because n_min is 2' do
+        parser = c("1").rep(2) >> c("end")
+        result = parser.run("1end")
+        pp result
+        expect(result.failure?).to be_truthy
+      end
+    end
+  end
+
+  describe 'repeat' do
+    context 'when lower bound' do
+      it 'matches one' do
+        parser = string('hello').repeat(n_min: 1)
+        result = parser.run('hello')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(['hello'])
+      end
+
+      it 'matches many' do
+        parser = string('a').repeat(n_min: 1)
+        result = parser.run('aaaaaaaaaaaaaaa')
+
+        expect(result.success?).to be_truthy
+        expect(result.value.join).to eq("aaaaaaaaaaaaaaa")
+      end
+
+      it 'fails, because n_min is 2' do
+        parser = c("1").repeat(n_min: 2) >> c("end")
+        result = parser.run("1end")
+        pp result
+        expect(result.failure?).to be_truthy
+      end
+    end
+
+    context 'when upper bound' do
+      it 'matches one' do
+        parser = string('hello').repeat(n_min: 1, n_max: 1)
+        result = parser.run('hellohello')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(['hello'])
+      end
+
+      it 'matches many' do
+        parser = string('a').repeat(n_min: 1, n_max: 5)
+        result = parser.run('aaaaaaaaaaaaaaa')
+
+        expect(result.success?).to be_truthy
+        expect(result.value.join).to eq("aaaaa")
+      end
+    end
   end
 
 end
