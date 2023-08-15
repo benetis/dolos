@@ -7,12 +7,7 @@ module Dolos
     attr_reader :io, :offset, :backup
 
     def initialize(str)
-      if str.is_a?(String)
-        @io = StringIO.new(str.encode('UTF-8'))
-      else
-        @io = str
-      end
-      @io.set_encoding('UTF-8')
+      @io = StringIO.new(str.encode('UTF-8'))
       @offset = 0
     end
 
@@ -41,12 +36,25 @@ module Dolos
       io.seek(offset)
     end
 
+    # A bit tricky, like this whole library
+    # Since utf8 characters can be multiple bytes long, we need to
+    # read the next byte and check if it's a valid utf8 character
     def peek(bytesize)
       current_position = io.pos
       data = io.read(bytesize)
       io.seek(current_position)
-      data
+
+      return nil if data.nil?
+
+      while !data.force_encoding('UTF-8').valid_encoding? && bytesize < 4 # a UTF-8 character can be at most 4 bytes long
+        bytesize += 1
+        data = io.read(bytesize)
+        io.seek(current_position)
+      end
+
+      [data.force_encoding('UTF-8'), bytesize]
     end
+
 
     def matches_regex?(pattern)
       current_position = io.pos

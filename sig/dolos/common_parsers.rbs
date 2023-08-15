@@ -1,0 +1,5 @@
+module Dolos
+  module CommonParsers
+    def ws: -> Parser[String]
+  end
+end

@@ -35,5 +35,24 @@ module Dolos
         end
       end
     end
+
+
+    def any_char
+      Parser.new do |state|
+        state.input.mark_offset
+
+        char, = state.input.peek(1)
+
+        if char && !char.empty?
+          Success.new(char, char.bytesize)
+        else
+          advanced = state.input.offset
+          state.input.rollback
+          Failure.new('Expected any character but got end of input', advanced)
+        end
+      end
+    end
+
+
   end
 end

@@ -1,7 +1,7 @@
 module Dolos
   module Parsers
+    def any_char: -> Parser[String]
     def regex: (Regexp) -> Parser[String]
-
     def string: (String)-> Parser[String]
   end
 end

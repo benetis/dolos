@@ -7,6 +7,7 @@ Gem::Specification.new do |spec|
   spec.version = Dolos::VERSION
   spec.authors = ["benetis"]
   spec.email = ["git@benetis.me"]
+  spec.files = Dir["lib/**/*"]
 
   spec.summary = "TODO: Write a short summary, because RubyGems requires one."
   spec.description = "TODO: Write a longer description or delete this line."

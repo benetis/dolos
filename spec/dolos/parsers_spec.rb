@@ -115,6 +115,36 @@ RSpec.describe Dolos::Parsers do
     end
   end
 
+  describe 'any_char' do
+    context 'when basic case' do
+      it 'parses a single character' do
+        parser = any_char
+        result = parser.run('a')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq('a')
+      end
+
+      it 'parses a single character' do
+        parser = any_char
+        result = parser.run('b')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq('b')
+      end
+    end
+
+    context 'when special characters' do
+      it 'parses a single character' do
+        parser = any_char
+        result = parser.run('š')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq('š')
+      end
+    end
+  end
+
 
 
 end

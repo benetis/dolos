@@ -4,13 +4,15 @@ module Dolos
     attr_reader offset: Integer
     attr_reader backup: Integer
 
+    def initialize: (String) -> void
+
     def advance: (Integer)-> void
 
     def mark_offset: -> void
 
     def matches?: (String) -> bool
 
-    def peek: -> String?
+    def peek: -> [String?, Integer]
 
     def rollback: -> void
   end
