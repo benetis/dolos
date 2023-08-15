@@ -21,3 +21,10 @@ greeter = c("Hello")
 greet_and_speak = greeter >> c(", ") >> parser
 greet_and_speak.parse("Hello, Parsers are great!") # <Result::Success>
 ```
+
+### Contributing
+Contributors are welcome. Note: since library is not yet stable, I recommend getting in touch with me before starting to work on something.
+
+#### Other parser combinator libraries
+- [Fastparse](https://com-lihaoyi.github.io/fastparse/) (Scala)
+- [Parsby](https://github.com/jolmg/parsby) (Ruby)
