@@ -336,6 +336,22 @@ RSpec.describe Dolos do
 
     end
 
+    context 'captures' do
+      it 'captures the result of a parser' do
+        parser = string('hello').zero_or_more.capture!
+        result = parser.run('hello')
+
+        expect(result.captures).to eq(['hello'])
+      end
+
+      it 'captures all matched many pairs' do
+        parser = string('hello').zero_or_more.capture!
+        result = parser.run('hellohellohello')
+
+        expect(result.captures).to eq(['hello', 'hello', 'hello'])
+      end
+    end
+
   end
 
 end
