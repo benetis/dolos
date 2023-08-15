@@ -8,6 +8,7 @@ module Dolos
     def flatten: -> Parser[A]
     def map: [B](^(A) -> B) -> Parser[B]
     def map_value: [B](^(A) -> B) -> Parser[B]
+    def optional: -> Parser[A?]
     def product: [B](Parser[A]) -> Parser[B]
     def run: (String) -> Result[A]
     def run_with_state: (ParserState) -> Result[A]

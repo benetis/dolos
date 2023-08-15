@@ -144,6 +144,17 @@ module Dolos
     end
     alias_method :rep, :one_or_more
 
+    def optional
+      Parser.new do |state|
+        result = run_with_state(state.dup)
+        if result.success?
+          result
+        else
+          Success.new([], 0)
+        end
+      end
+    end
+    alias_method :opt, :optional
 
   end
 end
