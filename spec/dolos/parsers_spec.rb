@@ -111,7 +111,24 @@ RSpec.describe Dolos::Parsers do
 
         expect(result.failure?).to be_truthy
       end
+    end
 
+    context 'special characters' do
+      it 'parses a regex with special characters' do
+        parser = regex(/šįėę/)
+        result = parser.run('šįėę')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq('šįėę')
+      end
+
+      it 'parses special characters and does product' do
+        parser = regex(/ąąąą/) >> regex(/žžžž/)
+        result = parser.run('ąąąąžžžž')
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(['ąąąą', 'žžžž'])
+      end
     end
   end
 
