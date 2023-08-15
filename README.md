@@ -11,6 +11,13 @@
 It does not use exceptions and instead returns a result object.
 Library is composable and concise.
 
+### Getting started
+
+#### Installation
+- Update Gemfile with `gem 'dolos'`
+- Run bundle install
+
+#### Usage
 ```ruby
 require 'dolos'
 include Dolos
