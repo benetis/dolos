@@ -107,7 +107,6 @@ module Dolos
 
         loop do
           result = run_with_state(state)
-          puts "Inside loop, result: #{result.inspect}"
 
           if result.failure?
             break
@@ -117,8 +116,6 @@ module Dolos
           total_length += result.length
           state.input.advance(result.length)
         end
-
-        puts "Final result: #{results}, total_length: #{total_length}"
 
         Success.new(results, 0) # Passing 0, because we already advanced the input and flatmap will advance it again
       end

@@ -310,12 +310,28 @@ RSpec.describe Dolos do
     end
 
     context 'when choice' do
-      it 'matches many' do
+      it 'matches all' do
         parser = (c("1") | c("2")).zero_or_more
         result = parser.run("121212")
 
         expect(result.success?).to be_truthy
         expect(result.value).to eq(["1", "2", "1", "2", "1", "2"])
+      end
+
+      it 'matches third choice' do
+        parser = (c("1") | c("2") | c("3")).zero_or_more
+        result = parser.run("3333")
+
+        expect(result.success?).to be_truthy
+        expect(result.value.join).to eq("3333")
+      end
+
+      it 'matches none' do
+        parser = (c("1") | c("2") | c("3")).zero_or_more
+        result = parser.run("4")
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([])
       end
 
     end
