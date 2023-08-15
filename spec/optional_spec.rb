@@ -3,7 +3,6 @@
 RSpec.describe Dolos do
   include Dolos
 
-
   describe 'optional' do
     it 'matches' do
       parser = string('hello').optional

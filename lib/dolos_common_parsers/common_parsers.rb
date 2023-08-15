@@ -6,7 +6,7 @@ module Dolos
       regex(/\s+/)
     end
 
-    # Convert to integer
+    # Capture as String and convert to integer
     def digit
       regex(/\d/).capture!.map { |capt| capt.map(&:to_i) }
     end
