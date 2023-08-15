@@ -5,5 +5,17 @@ module Dolos
     def ws
       regex(/\s+/)
     end
+
+    def digit
+      regex(/\d/).map(&:to_i)
+    end
+
+    def digits
+      regex(/\d+/)
+    end
+
+    def alpha_num
+      regex(/[a-zA-Z0-9]/)
+    end
   end
 end
