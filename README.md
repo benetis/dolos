@@ -91,7 +91,9 @@ city_line = ws.rep0 >> postcode >> ws >> city >> eol
 letter_parser = name_line >> second_line >> address_line >> city_line
 result = letter_parser.run(letter)
 
+# List of tuples
 pp result.captures
+# ["Vardeniui", "Pavardeniui", "Lietuvos Paštas", {:street=>"Totorių g."}, {:building=>"8"}, {:postcode=>"01121"}, {:city=>"Vilnius"}]
 
 ```
 
