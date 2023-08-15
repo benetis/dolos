@@ -53,6 +53,29 @@ module Dolos
       end
     end
 
+    # Matches any character in a string
+    # Example:
+    #  char_in('abc').run('b') # => Success.new('b', 1)
+    def char_in(characters_string)
+      characters_array = characters_string.chars
+
+      Parser.new do |state|
+        state.input.mark_offset
+
+        char, bytesize = state.input.peek(1)
+
+        if char && characters_array.include?(char)
+          Success.new(char, bytesize)
+        else
+          advanced = state.input.offset
+          state.input.rollback
+          Failure.new(
+            "Expected one of #{characters_array.inspect} but got #{char.inspect}",
+            advanced
+          )
+        end
+      end
+    end
 
   end
 end

@@ -228,6 +228,32 @@ RSpec.describe Dolos::Parsers do
     end
   end
 
+  describe 'char_in' do
+    it 'parses a single character' do
+      parser = char_in('abc')
+      result = parser.run('b')
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq('b')
+    end
+
+    it 'parses a single character with choice' do
+      parser = char_in('abc') | char_in('def')
+      result = parser.run('e')
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq('e')
+    end
+
+    it 'parses a single character with product' do
+      parser = char_in('abc') >> char_in('def')
+      result = parser.run('ad')
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq(['a', 'd'])
+    end
+  end
+
 
 
 end
