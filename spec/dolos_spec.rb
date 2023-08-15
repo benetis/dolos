@@ -486,6 +486,22 @@ RSpec.describe Dolos do
         expect(result.value.join).to eq("aaaaa")
       end
     end
+
+    context 'captures' do
+      it 'captures the result of a parser' do
+        parser = string('hello').repeat(n_min: 1).capture!
+        result = parser.run('hellohello')
+
+        expect(result.captures).to eq(['hello', 'hello'])
+      end
+
+      it 'captures all matched many pairs' do
+        parser = (string('hello') | c("world")).repeat(n_min: 1).capture!
+        result = parser.run('worldhelloworld')
+
+        expect(result.captures).to eq(['world', 'hello', 'world'])
+      end
+    end
   end
 
 end
