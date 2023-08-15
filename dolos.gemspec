@@ -10,7 +10,8 @@ Gem::Specification.new do |spec|
   spec.email = ["git@benetis.me"]
   spec.files = Dir["lib/**/*"]
 
-  spec.summary = "Parser combinator library for Ruby."
+  spec.summary = "Parser combinators library for Ruby."
+  spec.description = "Parser combinators library for Ruby. In active development, not stable yet."
   spec.homepage = "https://github.com/benetis/dolos"
   spec.required_ruby_version = ">= 3.1.0"
 
