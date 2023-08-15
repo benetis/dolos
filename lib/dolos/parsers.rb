@@ -77,5 +77,27 @@ module Dolos
       end
     end
 
+    def char_while(predicate)
+      Parser.new do |state|
+        state.input.mark_offset
+
+        buffer = String.new
+        loop do
+          char, bytesize = state.input.peek(1)
+          break if char.nil? || !predicate.call(char)
+
+          buffer << char
+          state.input.advance(bytesize)
+        end
+
+        if buffer.empty?
+          advanced = state.input.offset
+          Failure.new("Predicate never returned true", advanced)
+        else
+          Success.new(buffer, 0)
+        end
+      end
+    end
+
   end
 end

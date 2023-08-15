@@ -254,6 +254,34 @@ RSpec.describe Dolos::Parsers do
     end
   end
 
+  describe 'char_while' do
+    it 'should consume all non-whitespace characters' do
+      non_whitespace_parser = char_while(->(char) { !char.match?(/\s/) })
+      result = non_whitespace_parser.run("hello world")
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq('hello')
+    end
+
+    it 'should not consume anything if its false' do
+      non_whitespace_parser = char_while(->(_) { false })
+      result = non_whitespace_parser.run("hi")
+
+      expect(result.failure?).to be_truthy
+    end
+
+    context 'with combinators' do
+      it 'should consume all non-whitespace characters' do
+        non_whitespace_parser = char_while(->(char) { !char.match?(/\s/) })
+        parser = non_whitespace_parser >> c(" ") >> c('world')
+        result = parser.run("hello world")
+
+        expect(result.success?).to be_truthy
+        expect(result.value.flatten).to eq(['hello', ' ', 'world'])
+      end
+    end
+  end
+
 
 
 end
