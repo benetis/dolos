@@ -282,6 +282,14 @@ RSpec.describe Dolos do
         expect(result.success?).to be_truthy
         expect(result.value.join).to eq("aaaaaaaaaaaaaaa")
       end
+
+      it 'matches with alias' do
+        parser = (c('1') | c('2') | c('3')).rep0
+        result = parser.run('123')
+
+        expect(result.success?).to be_truthy
+        expect(result.value.join).to eq("123")
+      end
     end
 
     context 'when product' do

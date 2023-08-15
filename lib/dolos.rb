@@ -120,6 +120,7 @@ module Dolos
         Success.new(results, 0) # Passing 0, because we already advanced the input and flatmap will advance it again
       end
     end
+    alias_method :rep0, :zero_or_more
 
   end
 end
