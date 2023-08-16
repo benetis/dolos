@@ -1,7 +1,8 @@
 # frozen_string_literal: true
-
+require 'dolos_common_parsers/common_parsers'
 RSpec.describe Dolos do
   include Dolos
+  include Dolos::CommonParsers
 
   describe 'zero_or_more' do
     context 'when success' do
@@ -255,6 +256,21 @@ RSpec.describe Dolos do
         result = parser.run('worldhelloworld')
 
         expect(result.captures).to eq(['world', 'hello', 'world'])
+      end
+
+      it 'capture after repeat' do
+        input = "+37061111111|+37061111112,861111113"
+        sep = c(",") | c("|")
+        num_start = c("+370") | c("8")
+        num_rest = digits.capture!
+
+        number = num_start >> num_rest
+
+        parser = (number >> sep.opt).rep
+
+        result = parser.run(input)
+
+        expect(result.captures).to eq(["61111111", "61111112", "61111113"])
       end
     end
   end

@@ -109,7 +109,8 @@ module Dolos
     # repeat(n_min: 2) # 2 or more
     def repeat(n_min:, n_max: Float::INFINITY)
       Parser.new do |state|
-        results = []
+        values = []
+        captures = []
         count = 0
 
         while count < n_max
@@ -117,7 +118,8 @@ module Dolos
 
           break if result.failure?
 
-          results << result.value
+          values << result.value
+          captures.concat(result.captures)
           state.input.advance(result.length)
           count += 1
         end
@@ -125,7 +127,7 @@ module Dolos
         if count < n_min
           Failure.new("Expected parser to match at least #{n_min} times but matched only #{count} times", false)
         else
-          Success.new(results, 0) # Passing 0, because we already advanced the input and flatmap will advance it again
+          Success.new(values, 0, captures)
         end
       end
     end
