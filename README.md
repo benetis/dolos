@@ -113,6 +113,10 @@ pp result.captures
 # {:building=>"8"}, {:postcode=>"01121"}, {:city=>"Vilnius"}]
 
 ```
+### Roadmap
+- Better error handling
+- Recursive parser
+- Benchmarks & parser tests
 
 ### Contributing
 Contributors are welcome. Note: since library is not yet stable, I recommend getting in touch with me before starting to work on something.
