@@ -31,28 +31,22 @@ RSpec.describe Dolos do
         expect(result.success?).to be_truthy
         expect(result.value.flatten).to eq(['(', '(', ')', ')'])
       end
-    end
 
-    context 'when addition' do
-      it 'parses brackets, digits and addition' do
-        def term
-          recursive do |t|
-            ws.opt >>
-              (digit.map_value { |d| d.to_i } |
-                (c("(") >> expr >> c(")")).map_value { |_, e, _| e }) >>
-              ws.opt
-          end
+      it 'parses brackets with content, matches brackets' do
+        bracketed = recursive do |content|
+          open_bracket = c('(')
+          close_bracket = c(')')
+          open_bracket >>
+            (content | string('hello').capture!).opt >>
+            close_bracket
         end
 
-        def expr
-          recursive do |exp|
-            left_term = term
-            rest = (ws.opt >> c("+") >> ws.opt >> exp).map_value { |_, _, _, e| e }
-            (left_term >> rest).map_value { |l, r| l + r } | term
-          end
-        end
+        result = bracketed.rep.run('()((hello))')
 
-        expect(expr.run("1 + 2 + 3").value).to eq(6)
+        puts result.inspect
+
+        expect(result.success?).to be_truthy
+        expect(result.captures).to eq(['hello'])
       end
     end
 
