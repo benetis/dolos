@@ -22,7 +22,11 @@ module Dolos
     end
 
     def run_with_state(state)
-      parser_proc.call(state)
+      result = parser_proc.call(state)
+      if result.success?
+        state.last_success_position = state.input.offset
+      end
+      result
     end
 
     def capture!
@@ -112,6 +116,7 @@ module Dolos
         values = []
         captures = []
         count = 0
+        state.input.mark_offset
 
         while count < n_max
           result = run_with_state(state.dup)
@@ -125,7 +130,12 @@ module Dolos
         end
 
         if count < n_min
-          Failure.new("Expected parser to match at least #{n_min} times but matched only #{count} times", false)
+          error_pos = state.input.offset
+          Failure.new(
+            "Expected parser to match at least #{n_min} times but matched only #{count} times",
+            error_pos,
+            state
+          )
         else
           Success.new(values, 0, captures)
         end

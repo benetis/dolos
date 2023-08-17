@@ -10,14 +10,17 @@ module Dolos
           Success.new(utf8_str, str.bytesize)
         else
           advanced = state.input.offset
+          got_error = state.input.io.string.byteslice(state.input.backup, advanced)
           state.input.rollback
           Failure.new(
-            "Expected #{str.inspect} but got #{state.input.io.string.inspect}",
-            advanced
+            "Expected #{str.inspect} but got #{got_error.inspect}",
+            advanced,
+            state
           )
         end
       end
     end
+
     alias_method :c, :string
 
     def regex(pattern)
@@ -30,12 +33,12 @@ module Dolos
           state.input.rollback
           Failure.new(
             "Expected pattern #{pattern.inspect} but got #{state.input.io.string.inspect}",
-            advanced
+            advanced,
+            state
           )
         end
       end
     end
-
 
     def any_char
       Parser.new do |state|
@@ -48,7 +51,11 @@ module Dolos
         else
           advanced = state.input.offset
           state.input.rollback
-          Failure.new('Expected any character but got end of input', advanced)
+          Failure.new(
+            'Expected any character but got end of input',
+            advanced,
+            state
+          )
         end
       end
     end
@@ -71,7 +78,8 @@ module Dolos
           state.input.rollback
           Failure.new(
             "Expected one of #{characters_array.inspect} but got #{char.inspect}",
-            advanced
+            advanced,
+            state
           )
         end
       end
@@ -92,7 +100,11 @@ module Dolos
 
         if buffer.empty?
           advanced = state.input.offset
-          Failure.new("Predicate never returned true", advanced)
+          Failure.new(
+            "Predicate never returned true",
+            advanced,
+            state
+          )
         else
           Success.new(buffer, 0)
         end

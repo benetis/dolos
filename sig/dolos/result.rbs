@@ -16,6 +16,7 @@ module Dolos
 
   class Failure < Result[bot]
     attr_reader committed: bool
+    attr_reader error_position: Integer
     attr_reader message: String
 
     def captures: -> []

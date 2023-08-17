@@ -22,7 +22,6 @@ module Dolos
 
     def matches?(utf8_str)
       read = io.read(utf8_str.bytesize)
-      io.seek(offset)
 
       if read.nil?
         false

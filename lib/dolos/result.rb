@@ -40,18 +40,37 @@ module Dolos
   end
 
   class Failure < Result
-    attr_reader :message, :committed
+    attr_reader :message, :error_position, :state
 
-    def initialize(message, committed)
+    def initialize(message, error_position, state)
       @message = message
-      @committed = committed
+      @error_position = error_position
+      @state = state
     end
 
     def inspect
+      pretty_print
+    end
+
+    def pretty_print
+      input_string = state.input.io.string
+
+      pointer = "^" # This will point to the error position
+
+      context_range = 10 # Chars before and after the error to display
+
+      start_index = [error_position - context_range, 0].max
+      end_index = [error_position + context_range, input_string.length].max
+
+      substring = input_string[start_index..end_index]
+
+      padding = error_position - start_index
+
       [
-        "Failure",
-        "message: #{message}",
-        "committed: #{committed}"
+        "Failure: #{message}",
+        substring,
+        "#{' ' * padding}#{pointer}",
+        "Error Position: #{error_position}, Last Success Position: #{state.last_success_position}"
       ].join("\n")
     end
 
