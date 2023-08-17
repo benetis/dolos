@@ -117,6 +117,7 @@ pp result.captures
 - Better error handling
 - Recursive parser
 - Benchmarks & parser tests
+- Documentation
 
 ### Contributing
 Contributors are welcome. Note: since library is not yet stable, I recommend getting in touch with me before starting to work on something.
