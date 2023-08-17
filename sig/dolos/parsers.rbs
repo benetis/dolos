@@ -3,5 +3,7 @@ module Dolos
     def any_char: -> Parser[String]
     def regex: (Regexp) -> Parser[String]
     def string: (String)-> Parser[String]
+
+    def recursive: [A, B](^(Parser[A]) -> Parser[B]) -> Parser[B]
   end
 end

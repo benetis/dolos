@@ -111,5 +111,22 @@ module Dolos
       end
     end
 
+    def recursive(&block)
+      recursive_parser = nil
+      placeholder = Parser.new do |state|
+        result = recursive_parser.run_with_state(state)
+        if result.failure?
+          error_msg = "Error in recursive structure around position #{state.input.offset}: #{result.message}"
+          Failure.new(error_msg, state.input.offset, state)
+        else
+          result
+        end
+      end
+
+      actual_parser = block.call(placeholder)
+      recursive_parser = actual_parser
+      actual_parser
+    end
+
   end
 end
