@@ -62,7 +62,7 @@ module Dolos
       end
     end
 
-    def flat_map(&block)
+    def combine(&block)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
@@ -83,7 +83,7 @@ module Dolos
     end
 
     def product(other_parser)
-      flat_map do |value1, capture1|
+      combine do |value1, capture1|
         other_parser.map_value do |value2|
           [value1, value2]
         end.map do |capture2|
@@ -91,7 +91,6 @@ module Dolos
         end
       end
     end
-
     alias_method :>>, :product
 
     def choice(other_parser)
@@ -187,6 +186,12 @@ module Dolos
         parser_memo.run_with_state(state)
       end
     end
+
+    private
+
+    # def combine_and_discard_empty(*arrays)
+    #   arrays.compact.reject { |arr| arr.is_a?(Array) && arr.empty? }
+    # end
 
   end
 end
