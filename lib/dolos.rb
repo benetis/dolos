@@ -40,6 +40,7 @@ module Dolos
       end
     end
 
+    # Will call block on captures
     def map_captures(&block)
       Parser.new do |state|
         result = run_with_state(state)
@@ -51,22 +52,12 @@ module Dolos
       end
     end
 
-    def map_value(&block)
-      Parser.new do |state|
-        result = run_with_state(state)
-        if result.success?
-          Success.new(block.call(result.value), result.length, result.captures)
-        else
-          result
-        end
-      end
-    end
-
+    # Will call block on tuple of value
     def map(&block)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
-          Success.new(block.call(result.value), result.length, block.call(result.captures))
+          Success.new(block.call(result.value), result.length, result.captures)
         else
           result
         end
@@ -95,7 +86,7 @@ module Dolos
 
     def product(other_parser)
       combine do |value1, capture1|
-        other_parser.map_value do |value2|
+        other_parser.map do |value2|
           [value1, value2]
         end.map_captures do |capture2|
           [capture1, capture2].flatten
@@ -106,24 +97,20 @@ module Dolos
 
     def product_l(other_parser)
       combine do |value1, capture1|
-        other_parser.map_value do |value2|
-          [value1, value2]
+        other_parser.map do |_|
+          value1
         end.map_captures do |capture2|
           [capture1, capture2].flatten
-        end.map_value do |combined|
-          combined.first
         end
       end
     end
 
     def product_r(other_parser)
-      combine do |value1, capture1|
-        other_parser.map_value do |value2|
-          [value1, value2]
+      combine do |_, capture1|
+        other_parser.map do |value2|
+          value2
         end.map_captures do |capture2|
           [capture1, capture2].flatten
-        end.map_value do |combined|
-          combined.last
         end
       end
     end

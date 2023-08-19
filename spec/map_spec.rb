@@ -5,21 +5,21 @@ RSpec.describe Dolos do
 
   describe 'map_value' do
     it 'maps over one parser' do
-      parser = string('hello').map_value { |value| value.upcase }
+      parser = string('hello').map { |value| value.upcase }
       result = parser.run('hello')
 
       expect(result.value).to eq('HELLO')
     end
 
     it 'maps over two parsers' do
-      parser = (string('hello') & string('world')).map_value { |value| value.map(&:upcase) }
+      parser = (string('hello') & string('world')).map { |value| value.map(&:upcase) }
       result = parser.run('helloworld')
 
       expect(result.value).to eq(['HELLO', 'WORLD'])
     end
 
     it 'maps over two parsers and uses them in a third' do
-      loud_hello = (string('hello') & string('world')).map_value { |value| value.map(&:upcase) }
+      loud_hello = (string('hello') & string('world')).map { |value| value.map(&:upcase) }
 
       parser = loud_hello & string('!')
 
@@ -52,16 +52,6 @@ RSpec.describe Dolos do
 
       result = parser.run("1234")
       expect(result.captures).to eq(21)
-    end
-  end
-
-  describe 'map' do
-    it 'maps both values and captures' do
-      parser = (string("1") & string("2")).capture!.map { |value| value.map(&:to_i) }
-
-      result = parser.run("12")
-      expect(result.captures).to eq([1, 2])
-      expect(result.value).to eq([1, 2])
     end
   end
 

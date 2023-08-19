@@ -14,23 +14,23 @@ RSpec.describe 'should parse address on a letter' do
   }
   let(:honorific) { c("Mr. ") | c("Mrs. ") | c("Ms. ") }
   let(:alpha_with_lt) { char_in("ąčęėįšųūžĄČĘĖĮŠŲŪŽ") | alpha }
-  let(:first_name) { alpha_with_lt.rep.capture!.map_captures(&:join) }
-  let(:last_name) { alpha_with_lt.rep.capture!.map_captures(&:join) }
+  let(:first_name) { alpha_with_lt.rep.map(&:join).capture! }
+  let(:last_name) { alpha_with_lt.rep.map(&:join).capture! }
   let(:name_line) { ws.rep0 & honorific & first_name & ws & last_name & eol }
 
   let(:company_type) { c("AB") }
   let(:quote_open) { c("„") }
   let(:quote_close) { c("“") }
-  let(:company_name) { (alpha_with_lt | ws).rep.capture!.map_captures(&:join) }
+  let(:company_name) { (alpha_with_lt | ws).rep.map(&:join).capture! }
   let(:company_info) { company_type & ws.rep0 & quote_open & company_name & quote_close }
   let(:second_line) { ws.rep0 & company_info & eol }
 
-  let(:street_name) { char_while(->(char) { !char.match(/\d/) }).capture!.map_captures(&:first).map_captures { |s| { street: s.strip } } }
-  let(:building) { digits.capture!.map_captures(&:first).map_captures { |s| { building: s.strip } } }
+  let(:street_name) { char_while(->(char) { !char.match(/\d/) }).map { |s| { street: s.strip } }.capture! }
+  let(:building) { digits.map { |s| { building: s.strip } }.capture! }
   let(:address_line) { ws.rep0 & street_name & building & eol }
 
-  let(:postcode) { digits.capture!.map_captures(&:join).map_captures { |s| { postcode: s.strip } } }
-  let(:city) { alpha_with_lt.rep.capture!.map_captures(&:join).map_captures { |s| { city: s.strip } } }
+  let(:postcode) { digits.map { |s| { postcode: s.strip } }.capture! }
+  let(:city) { alpha_with_lt.rep.map(&:join).map { |s| { city: s.strip } }.capture! }
   let(:city_line) { ws.rep0 & postcode & ws & city & eol }
 
   context 'first line' do
