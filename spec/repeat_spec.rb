@@ -273,6 +273,33 @@ RSpec.describe Dolos do
         expect(result.captures).to eq(["61111111", "61111112", "61111113"])
       end
     end
+
+    context 'when separator' do
+      let(:int_literal) { regex(/-?\d+/) }
+      let(:comma) { regex(/,\s*/) }
+
+      let(:repeated_ints) { int_literal.repeat(n_min: 2, n_max: 4, separator: comma) }
+
+      it 'recognizes valid separated sequences' do
+        expect(repeated_ints.run('1, 2, 3').success?).to be_truthy
+        expect(repeated_ints.run('1,2,3,4').success?).to be_truthy
+      end
+
+      it 'stops on missing separator' do
+        result = repeated_ints.run('1 2, 3')
+
+        expect(result.failure?).to be_truthy
+      end
+
+      it 'respects the n_min constraint' do
+        result = repeated_ints.run('1')
+        expect(result.failure?).to be_truthy
+      end
+
+      it 'respects the n_max constraint' do
+        expect(repeated_ints.run('1, 2, 3, 4, 5').value).to eq(['1', '2', '3', '4'])
+      end
+    end
   end
 
 end

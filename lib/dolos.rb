@@ -111,22 +111,31 @@ module Dolos
     # rep(n = 2)   # exactly 2
     # repeat(n_min: 2, n_max: 4) # 2 to 4
     # repeat(n_min: 2) # 2 or more
-    def repeat(n_min:, n_max: Float::INFINITY)
+    def repeat(n_min:, n_max: Float::INFINITY, separator: nil)
       Parser.new do |state|
         values = []
         captures = []
         count = 0
         state.input.mark_offset
 
-        while count < n_max
+        loop do
           result = run_with_state(state.dup)
 
-          break if result.failure?
+          if result.failure? || count >= n_max
+            break
+          end
 
           values << result.value
           captures.concat(result.captures)
           state.input.advance(result.length)
           count += 1
+
+          if separator && count < n_max
+            sep_result = separator.run_with_state(state.dup)
+            break if sep_result.failure?
+
+            state.input.advance(sep_result.length)
+          end
         end
 
         if count < n_min
