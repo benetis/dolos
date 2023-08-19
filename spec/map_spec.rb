@@ -28,15 +28,15 @@ RSpec.describe Dolos do
     end
 
     it 'maps over parsers and converts them to ints' do
-      parser = (string("1") & string("2") & string("3")).capture!.flatten.map { |value| value.map(&:to_i) }
+      parser = (string("1") & string("2") & string("3")).capture!.flatten.map_captures { |value| value.map(&:to_i) }
 
       result = parser.run("123")
       expect(result.captures).to eq([1, 2, 3])
     end
 
     it 'maps over groups and converts to ints' do
-      first = (string("1") & string("2")).capture!.map { |value| value.map(&:to_i) }
-      second = (string("3") & string("4")).capture!.map { |value| value.map(&:to_i) }
+      first = (string("1") & string("2")).capture!.map_captures { |value| value.map(&:to_i) }
+      second = (string("3") & string("4")).capture!.map_captures { |value| value.map(&:to_i) }
       parser = (first & second)
 
       result = parser.run("1234")
@@ -44,9 +44,9 @@ RSpec.describe Dolos do
     end
 
     it 'maps over groups to add and then multiply' do
-      first = (string("1") & string("2")).capture!.map { |digit| digit.map(&:to_i).reduce(:+) } # 3
-      second = (string("3") & string("4")).capture!.map { |digit| digit.map(&:to_i).reduce(:+) } # 7
-      parser = (first & second).map { |value| value.reduce(:*) } # 21
+      first = (string("1") & string("2")).capture!.map_captures { |digit| digit.map(&:to_i).reduce(:+) } # 3
+      second = (string("3") & string("4")).capture!.map_captures { |digit| digit.map(&:to_i).reduce(:+) } # 7
+      parser = (first & second).map_captures { |value| value.reduce(:*) } # 21
 
       result = parser.run("1234")
       expect(result.captures).to eq(21)

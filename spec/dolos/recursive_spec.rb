@@ -63,7 +63,7 @@ RSpec.describe Dolos do
   end
 
   context 'when recursive parsers reference each other' do
-    let(:digits_int) { digits.capture!.map(&:first).map(&:to_i) }
+    let(:digits_int) { digits.capture!.map_captures(&:first).map_captures(&:to_i) }
     let(:paren_expr) { (c('(') & expression.lazy & c(')')) }
     let(:factor) do
       paren_expr | digits_int

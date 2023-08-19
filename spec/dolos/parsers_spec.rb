@@ -60,7 +60,7 @@ RSpec.describe Dolos::Parsers do
       end
 
       it 'converts to integer' do
-        parser = regex(/\d/).capture!.map { |capt| capt.map(&:to_i) }
+        parser = regex(/\d/).capture!.map_captures { |capt| capt.map(&:to_i) }
         result = parser.run('1')
 
         expect(result.success?).to be_truthy
@@ -68,7 +68,7 @@ RSpec.describe Dolos::Parsers do
       end
 
       it 'converts to integer' do
-        parser = regex(/\d+/).capture!.map { |capt| capt.map(&:to_i) }
+        parser = regex(/\d+/).capture!.map_captures { |capt| capt.map(&:to_i) }
         result = parser.run('123')
 
         expect(result.success?).to be_truthy
@@ -214,9 +214,9 @@ RSpec.describe Dolos::Parsers do
       end
 
       it 'captures a date' do
-        year = c("Year: ") & any_char.rep(4).map(&:join).capture!
-        month = c("Month: ") & any_char.rep(2).map(&:join).capture!
-        day = c("Day: ") & any_char.rep(2).map(&:join).capture!
+        year = c("Year: ") & any_char.rep(4).map_captures(&:join).capture!
+        month = c("Month: ") & any_char.rep(2).map_captures(&:join).capture!
+        day = c("Day: ") & any_char.rep(2).map_captures(&:join).capture!
         sep = c(", ")
 
         parser = year & sep & month & sep & day
