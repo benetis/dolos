@@ -64,23 +64,6 @@ module Dolos
       end
     end
 
-    # Will call block on each element of value and capture
-    def map_each(&block)
-      Parser.new do |state|
-        result = run_with_state(state)
-        if result.success?
-          if result.value.is_a?(Array)
-            new_value = result.value.map_each(&block)
-          else
-            new_value = block.call(result.value)
-          end
-          Success.new(new_value, result.length, result.captures.map_each(&block))
-        else
-          result
-        end
-      end
-    end
-
     def combine(&block)
       Parser.new do |state|
         result = run_with_state(state)

@@ -60,7 +60,7 @@ RSpec.describe Dolos::Parsers do
       end
 
       it 'converts to integer' do
-        parser = regex(/\d/).capture!.map_captures { |capt| capt.map_each(&:to_i) }
+        parser = regex(/\d/).capture!.map_captures { |capt| capt.map(&:to_i) }
         result = parser.run('1')
 
         expect(result.success?).to be_truthy
@@ -68,7 +68,7 @@ RSpec.describe Dolos::Parsers do
       end
 
       it 'converts to integer' do
-        parser = regex(/\d+/).capture!.map_captures { |capt| capt.map_each(&:to_i) }
+        parser = regex(/\d+/).capture!.map_captures { |capt| capt.map(&:to_i) }
         result = parser.run('123')
 
         expect(result.success?).to be_truthy

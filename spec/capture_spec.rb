@@ -28,14 +28,14 @@ RSpec.describe Dolos do
     end
 
     it 'captures result of parser and maps over it' do
-      parser = string('hello').capture!.map_captures { |value| value.map_each(&:upcase) }
+      parser = string('hello').capture!.map_captures { |value| value.map(&:upcase) }
       result = parser.run('hello')
 
       expect(result.captures).to eq(['HELLO'])
     end
 
     it 'captures result of two parsers and maps over them' do
-      parser = (string('hello') & string('world')).capture!.map_captures { |value| value.map_each(&:upcase) }
+      parser = (string('hello') & string('world')).capture!.map_captures { |value| value.map(&:upcase) }
       result = parser.run('helloworld')
 
       expect(result.captures).to eq(['HELLO', 'WORLD'])

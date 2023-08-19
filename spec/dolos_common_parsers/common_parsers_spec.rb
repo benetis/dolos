@@ -16,11 +16,11 @@ RSpec.describe Dolos::CommonParsers do
 
   describe 'int' do
     it 'converts to integer' do
-      parser = int
+      parser = int.capture!
       result = parser.run('1')
 
       expect(result.success?).to be_truthy
-      expect(result.captures).to eq([1])
+      expect(result.captures).to eq(['1'])
     end
   end
 
