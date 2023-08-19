@@ -15,7 +15,7 @@ module Dolos
     end
 
     def int
-      digit.map_value(&:to_i)
+      digit.map(&:to_i)
     end
 
     # Capture as string

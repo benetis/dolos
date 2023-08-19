@@ -53,7 +53,7 @@ module Dolos
     end
 
     # Will call block on tuple of value
-    def map_value(&block)
+    def map(&block)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
@@ -86,7 +86,7 @@ module Dolos
 
     def product(other_parser)
       combine do |value1, capture1|
-        other_parser.map_value do |value2|
+        other_parser.map do |value2|
           [value1, value2]
         end.map_captures do |capture2|
           [capture1, capture2].flatten
@@ -97,7 +97,7 @@ module Dolos
 
     def product_l(other_parser)
       combine do |value1, capture1|
-        other_parser.map_value do |_|
+        other_parser.map do |_|
           value1
         end.map_captures do |capture2|
           [capture1, capture2].flatten
@@ -107,7 +107,7 @@ module Dolos
 
     def product_r(other_parser)
       combine do |_, capture1|
-        other_parser.map_value do |value2|
+        other_parser.map do |value2|
           value2
         end.map_captures do |capture2|
           [capture1, capture2].flatten

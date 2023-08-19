@@ -12,10 +12,10 @@ RSpec.describe 'parse json' do
       (c("\"") >> char_while(->(ch) { ch != "\"" }) << c("\""))
     end
     let(:boolean) do
-      (c("true").map_value { true } | c("false").map_value { false })
+      (c("true").map { true } | c("false").map { false })
     end
     let(:null) do
-      c("null").map_value { nil }
+      c("null").map { nil }
     end
     let(:array) do
       recursive do |arr|
@@ -24,17 +24,17 @@ RSpec.describe 'parse json' do
     end
 
     let(:value) do
-      digits.map_value(&:to_i) | object | string_literal | boolean | null | array
+      digits.map(&:to_i) | object | string_literal | boolean | null | array
     end
 
     let(:key_line) do
-      ((string_literal << ws_rep0) << c(":") & ws_rep0 >> value).map_value do |tuple|
+      ((string_literal << ws_rep0) << c(":") & ws_rep0 >> value).map do |tuple|
         { tuple[0] => tuple[1] }
       end
     end
 
     let(:key_lines) do
-      (key_line << ws_rep0).repeat(n_min: 1, separator: (comma << ws_rep0 << eol.opt)).map_value do |arr|
+      (key_line << ws_rep0).repeat(n_min: 1, separator: (comma << ws_rep0 << eol.opt)).map do |arr|
         arr.reduce({}) do |acc, hash|
           acc.merge(hash)
         end
