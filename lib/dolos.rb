@@ -29,11 +29,11 @@ module Dolos
       result
     end
 
-    def capture!
+    def capture!(wrap_in = nil)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
-          result.capture!
+          result.capture!(wrap_in)
         else
           result
         end

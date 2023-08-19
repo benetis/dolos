@@ -59,6 +59,22 @@ RSpec.describe Dolos do
       end
 
     end
+
+    context 'when wrap_in is defined' do
+      it 'should wrap capture in array' do
+        parser = string('hello').capture!([])
+        result = parser.run('hello')
+
+        expect(result.captures).to eq(['hello'])
+      end
+
+      it 'should wrap capture in hash' do
+        parser = string('hello').capture!(:hallo)
+        result = parser.run('hello')
+
+        expect(result.captures).to eq([{:hallo => 'hello'}])
+      end
+    end
   end
 
 end
