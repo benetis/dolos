@@ -11,9 +11,15 @@ RSpec.describe 'parse json' do
     let(:string_literal) do
       (c("\"") >> char_while(->(ch) { ch != "\"" }) << c("\""))
     end
+    let(:boolean) do
+      (c("true") | c("false"))
+    end
+    let(:null) do
+      c("null")
+    end
 
     let(:value) do
-      digit | object | string_literal
+      digit | object | string_literal | boolean | null
     end
 
     let(:key_line) do
@@ -61,6 +67,27 @@ RSpec.describe 'parse json' do
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
         expect(result.value).to eq({ "key" => "1", "key2" => "2" })
+      end
+
+      it 'supports string literals as values' do
+        json = '{ "key": "value" }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => "value" })
+      end
+
+      it 'supports boolean literals as values' do
+        json = '{ "key": true }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => "true" })
+      end
+
+      it 'supports null literals as values' do
+        json = '{ "key": null }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => "null" })
       end
     end
 
