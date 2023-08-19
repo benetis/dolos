@@ -94,24 +94,25 @@ RSpec.describe Dolos do
         expect(result.captures).to eq([123])
       end
 
-      it 'parses 1+2 and returns 3' do
+      it 'parses 1+2 and returns captures' do
         result = expression.run('1+2')
         puts result.inspect
         expect(result.success?).to be_truthy
+        expect(result.captures).to eq([1, "+", 2])
       end
 
-      it 'parses 1+2+3 and returns 6' do
+      it 'parses 1+2+3 and returns captures' do
         result = expression.run('1+2+3')
         puts result.inspect
         expect(result.success?).to be_truthy
-        expect(result.captures).to eq([6])
+        expect(result.captures).to eq([1, "+", 2, "+", 3])
       end
 
-      it 'parses 1+2*3 and returns 7' do
+      it 'parses 1+2*3 and returns captures' do
         result = expression.run('1+2*3')
         puts result.inspect
         expect(result.success?).to be_truthy
-        expect(result.captures).to eq([7])
+        expect(result.captures).to eq([1, "+", 2, "*", 3])
       end
 
     end

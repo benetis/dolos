@@ -10,7 +10,6 @@ module Dolos
     def initialize(value, length, captures = [])
       @value = value
       @length = length
-      # @captures = captures || value
       @captures = captures
     end
 
