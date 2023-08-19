@@ -36,7 +36,7 @@ RSpec.describe Dolos do
 
     context 'when product' do
       it 'matches optional part' do
-        parser = c("start") >> c("1").optional >> c("end")
+        parser = c("start") & c("1").optional & c("end")
         result = parser.run("start1end")
 
         expect(result.success?).to be_truthy
@@ -44,7 +44,7 @@ RSpec.describe Dolos do
       end
 
       it 'skips optional part' do
-        parser = c("start") >> c("1").optional >> c("end")
+        parser = c("start") & c("1").optional & c("end")
         result = parser.run("startend")
 
         expect(result.success?).to be_truthy
@@ -52,7 +52,7 @@ RSpec.describe Dolos do
       end
 
       it 'doesnt match the input - it will not make it optional' do
-        parser = c("start") >> c("1").optional >> c("end")
+        parser = c("start") & c("1").optional & c("end")
         result = parser.run("start2end")
 
         expect(result.success?).to be_falsey

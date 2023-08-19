@@ -39,7 +39,7 @@ RSpec.describe Dolos do
       end
 
       it 'matches all whitespace' do
-        parser = c(" ").rep0 >> c("hmm") >> string('hello').capture!
+        parser = c(" ").rep0 & c("hmm") & string('hello').capture!
         result = parser.run('   hmmhello')
 
         expect(result.success?).to be_truthy
@@ -49,7 +49,7 @@ RSpec.describe Dolos do
 
     context 'when product' do
       it 'matches many' do
-        parser = c("start") >> c("1").zero_or_more
+        parser = c("start") & c("1").zero_or_more
         result = parser.run("start111end")
 
         expect(result.success?).to be_truthy
@@ -57,7 +57,7 @@ RSpec.describe Dolos do
       end
 
       it 'many and then product' do
-        parser = c("1").zero_or_more >> c("end")
+        parser = c("1").zero_or_more & c("end")
         result = parser.run("111end")
 
         expect(result.success?).to be_truthy
@@ -65,7 +65,7 @@ RSpec.describe Dolos do
       end
 
       it 'many and then product' do
-        parser = c("start") >> c("yo").zero_or_more >> c("end")
+        parser = c("start") & c("yo").zero_or_more & c("end")
         result = parser.run("startyoyoyoyoend")
         expect(result.success?).to be_truthy
         expect(result.value.flatten(1)).to eq(["start", ["yo", "yo", "yo", "yo"], "end"])
@@ -158,7 +158,7 @@ RSpec.describe Dolos do
 
     context 'when product' do
       it 'matches many' do
-        parser = c("start") >> c("1").rep
+        parser = c("start") & c("1").rep
         result = parser.run("start111end")
 
         expect(result.success?).to be_truthy
@@ -166,7 +166,7 @@ RSpec.describe Dolos do
       end
 
       it 'many and then product' do
-        parser = c("1").rep >> c("end")
+        parser = c("1").rep & c("end")
         result = parser.run("111end")
 
         expect(result.success?).to be_truthy
@@ -174,7 +174,7 @@ RSpec.describe Dolos do
       end
 
       it 'many and then product' do
-        parser = c("start") >> c("yo").rep >> c("end")
+        parser = c("start") & c("yo").rep & c("end")
         result = parser.run("startyoyoyoyoend")
         expect(result.success?).to be_truthy
         expect(result.value.flatten(1)).to eq(["start", ["yo", "yo", "yo", "yo"], "end"])
@@ -184,14 +184,14 @@ RSpec.describe Dolos do
     context 'when n!=1' do
 
       it 'fails, because repeat exactly 2 times' do
-        parser = c("1").rep(2) >> c("end")
+        parser = c("1").rep(2) & c("end")
         result = parser.run("111end")
 
         expect(result.failure?).to be_truthy
       end
 
       it 'fails, because n_min is 2' do
-        parser = c("1").rep(2) >> c("end")
+        parser = c("1").rep(2) & c("end")
         result = parser.run("1end")
 
         expect(result.failure?).to be_truthy
@@ -218,7 +218,7 @@ RSpec.describe Dolos do
       end
 
       it 'fails, because n_min is 2' do
-        parser = c("1").repeat(n_min: 2) >> c("end")
+        parser = c("1").repeat(n_min: 2) & c("end")
         result = parser.run("1end")
 
         expect(result.failure?).to be_truthy
@@ -264,9 +264,9 @@ RSpec.describe Dolos do
         num_start = c("+370") | c("8")
         num_rest = digits.capture!
 
-        number = num_start >> num_rest
+        number = num_start & num_rest
 
-        parser = (number >> sep.opt).rep
+        parser = (number & sep.opt).rep
 
         result = parser.run(input)
 

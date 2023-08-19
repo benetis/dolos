@@ -26,7 +26,7 @@ RSpec.describe Dolos do
     end
 
     it 'handles failing parser before success and continues' do
-      parser = (string('hello') | string('world') | string('!')) >> string(" the ") >> string('end') | string('beginning')
+      parser = (string('hello') | string('world') | string('!')) & string(" the ") & string('end') | string('beginning')
       result = parser.run('! the beginning')
 
       expect(result.success?).to be_truthy

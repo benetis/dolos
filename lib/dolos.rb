@@ -91,7 +91,24 @@ module Dolos
         end
       end
     end
-    alias_method :>>, :product
+    alias_method :&, :product
+
+    def product_l(other_parser)
+      combine do |value1, _|
+        other_parser.map_value do |_|
+          value1
+        end
+      end
+    end
+
+    def product_r(other_parser)
+      combine do |_, _|
+        other_parser
+      end
+    end
+
+    alias_method :<<, :product_l
+    alias_method :>>, :product_r
 
     def choice(other_parser)
       Parser.new do |state|
@@ -189,9 +206,9 @@ module Dolos
 
     private
 
-    # def combine_and_discard_empty(*arrays)
-    #   arrays.compact.reject { |arr| arr.is_a?(Array) && arr.empty? }
-    # end
+    def combine_and_discard_empty(*arrays)
+      arrays.compact.reject { |arr| arr.is_a?(Array) && arr.empty? }
+    end
 
   end
 end

@@ -12,16 +12,16 @@ RSpec.describe Dolos do
     end
 
     it 'captures the result of two parsers' do
-      parser = (string('hello') >> string('world')).capture!
+      parser = (string('hello') & string('world')).capture!
       result = parser.run('helloworld')
 
       expect(result.captures).to eq(['hello', 'world'])
     end
 
     it 'captures the result of two parsers but not third' do
-      loud_hello = (string('hello') >> string('world')).capture!
+      loud_hello = (string('hello') & string('world')).capture!
 
-      parser = loud_hello >> string('!') >> string('!')
+      parser = loud_hello & string('!') & string('!')
 
       result = parser.run('helloworld!!')
       expect(result.captures).to eq(['hello', 'world'])
@@ -35,7 +35,7 @@ RSpec.describe Dolos do
     end
 
     it 'captures result of two parsers and maps over them' do
-      parser = (string('hello') >> string('world')).capture!.map { |value| value.map(&:upcase) }
+      parser = (string('hello') & string('world')).capture!.map { |value| value.map(&:upcase) }
       result = parser.run('helloworld')
 
       expect(result.captures).to eq(['HELLO', 'WORLD'])
@@ -51,7 +51,7 @@ RSpec.describe Dolos do
       end
 
       it 'captures the result of two parsers' do
-        parser = (string('hello') >> string('world')).capture!
+        parser = (string('hello') & string('world')).capture!
         result = parser.run('Xhelloworld')
 
         expect(result.failure?).to be_truthy

@@ -5,7 +5,7 @@ RSpec.describe Dolos::Result do
 
   describe 'failure' do
     it 'returns a failure' do
-      hello = c("Hello") >> c(" ") >> c("Good errors")
+      hello = c("Hello") & c(" ") & c("Good errors")
 
       result = hello.run("Hello Goodbye")
       expect(result.success?).to be false
@@ -21,7 +21,7 @@ RSpec.describe Dolos::Result do
     end
 
     it 'returns a failure with choice' do
-      hello = c("Good errors") >> c(" ") >> (c("or not") | c("or yes"))
+      hello = c("Good errors") & c(" ") & (c("or not") | c("or yes"))
 
       result = hello.run("Good errors or maybe")
       expect(result.success?).to be false
@@ -37,7 +37,7 @@ RSpec.describe Dolos::Result do
     end
 
     it 'returns failure with repeat' do
-      hello = (c("Good errors") >> c(" ").opt).rep(6)
+      hello = (c("Good errors") & c(" ").opt).rep(6)
 
       result = hello.run("Good errors Good errors Good errors Good errors")
       expect(result.success?).to be false
