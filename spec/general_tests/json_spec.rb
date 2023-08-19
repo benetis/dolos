@@ -9,7 +9,7 @@ RSpec.describe 'parse json' do
     let(:ws_rep0) { ws.rep0 }
     let(:comma) { c(",") }
     let(:string_literal) do
-      (c("\"") >> char_while(->(ch) { ch != "\"" }) << c("\""))
+      (c("\"") >> char_while(->(ch) { ch != "\"" }).opt << c("\""))
     end
     let(:boolean) do
       (c("true").map { true } | c("false").map { false })
@@ -23,8 +23,11 @@ RSpec.describe 'parse json' do
       end
     end
 
+    let(:negative_sign) { c("-").opt }
+    let(:number) { (negative_sign & digits).map { |tuple| tuple.join.to_i } }
+
     let(:value) do
-      digits.map(&:to_i) | object | string_literal | boolean | null | array
+      number | object | string_literal | boolean | null | array
     end
 
     let(:key_line) do
@@ -71,6 +74,20 @@ RSpec.describe 'parse json' do
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
         expect(result.value).to eq({ "key" => "1", "key2" => "2" })
+      end
+
+      it 'handles empty string as key' do
+        json = '{ "": 1 }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ [] => 1 })
+      end
+
+      it 'supports negative numbers' do
+        json = '{ "key": -1 }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => -1 })
       end
 
       it 'supports string literals as values' do
