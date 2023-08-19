@@ -29,11 +29,11 @@ module Dolos
       result
     end
 
-    def capture!
+    def capture!(wrap_in = nil)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
-          result.capture!
+          result.capture!(wrap_in)
         else
           result
         end
@@ -167,6 +167,16 @@ module Dolos
       end
     end
     alias_method :opt, :optional
+
+    # Unstable
+    def lazy
+      parser_memo = nil
+
+      Parser.new do |state|
+        parser_memo ||= self
+        parser_memo.run_with_state(state)
+      end
+    end
 
   end
 end

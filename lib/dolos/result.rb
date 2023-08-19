@@ -10,21 +10,22 @@ module Dolos
     def initialize(value, length, captures = [])
       @value = value
       @length = length
-      # @captures = captures || value
       @captures = captures
     end
 
-    def capture!
-      if value.is_a?(Array)
-        value.each do |v|
-          captures << v
-        end
+    # can be some named capture, :street, {:steet => capture }
+    # or an array, [], [capture]
+    def capture!(wrap_in = nil)
+      if wrap_in.is_a?(Array)
+        save_capture([value])
+      elsif wrap_in.is_a?(Symbol)
+        save_capture({ wrap_in => value })
       else
-        captures << value
+        save_capture(value)
       end
-
-      Success.new(value, length, captures)
     end
+
+
 
     def inspect
       "Success(value: '#{value}',length: #{length}, capture: '#{captures}')"
@@ -36,6 +37,20 @@ module Dolos
 
     def failure?
       false
+    end
+
+    private
+
+    def save_capture(val)
+      if val.is_a?(Array)
+        val.each do |v|
+          captures << v
+        end
+      else
+        captures << val
+      end
+
+      Success.new(val, length, captures)
     end
   end
 

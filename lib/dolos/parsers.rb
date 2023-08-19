@@ -111,5 +111,26 @@ module Dolos
       end
     end
 
+    # Unstable
+    def recursive(&block)
+      recursive_parser = nil
+
+      placeholder = Parser.new do |state|
+        raise "Recursive parser accessed before it was initialized!" if recursive_parser.nil?
+
+        recursive_parser.call.run_with_state(state).tap do |result|
+          if result.failure?
+            error_msg = "Error in recursive structure around position #{state.input.offset}: #{result.message}"
+            Failure.new(error_msg, state.input.offset, state)
+          end
+        end
+      end
+
+      recursive_parser = -> { block.call(placeholder) }
+      placeholder
+    end
+
+
+
   end
 end
