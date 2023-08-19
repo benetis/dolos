@@ -71,13 +71,13 @@ RSpec.describe Dolos do
 
     let(:divide_multiple) do
       recursive do |expr_placeholder|
-        (factor >> ((c('*') | c('/')) >> expr_placeholder).opt)
+        (factor >> ((c('*') | c('/')).capture! >> expr_placeholder).opt)
       end
     end
 
     let(:expression) {
       recursive do |expr_placeholder|
-        (divide_multiple.lazy >> ((c('+') | c('-')) >> expr_placeholder).opt)
+        (divide_multiple.lazy >> ((c('+') | c('-')).capture! >> expr_placeholder).opt)
       end
     }
 
@@ -98,7 +98,20 @@ RSpec.describe Dolos do
         result = expression.run('1+2')
         puts result.inspect
         expect(result.success?).to be_truthy
-        expect(result.captures).to eq([3])
+      end
+
+      it 'parses 1+2+3 and returns 6' do
+        result = expression.run('1+2+3')
+        puts result.inspect
+        expect(result.success?).to be_truthy
+        expect(result.captures).to eq([6])
+      end
+
+      it 'parses 1+2*3 and returns 7' do
+        result = expression.run('1+2*3')
+        puts result.inspect
+        expect(result.success?).to be_truthy
+        expect(result.captures).to eq([7])
       end
 
     end
