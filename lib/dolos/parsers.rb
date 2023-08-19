@@ -112,11 +112,12 @@ module Dolos
     end
 
 
+    # Alpha version, in-development
     def recursive(&block)
       recursive_parser = nil
 
       placeholder = Parser.new do |state|
-        raise "Recursive parser not yet initialized!" if recursive_parser.nil?
+        raise "Recursive parser accessed before it was initialized!" if recursive_parser.nil?
 
         recursive_parser.call.run_with_state(state).tap do |result|
           if result.failure?
@@ -129,6 +130,7 @@ module Dolos
       recursive_parser = -> { block.call(placeholder) }
       placeholder
     end
+
 
 
   end

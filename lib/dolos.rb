@@ -168,5 +168,14 @@ module Dolos
     end
     alias_method :opt, :optional
 
+    def lazy
+      parser_memo = nil
+
+      Parser.new do |state|
+        parser_memo ||= self
+        parser_memo.run_with_state(state)
+      end
+    end
+
   end
 end
