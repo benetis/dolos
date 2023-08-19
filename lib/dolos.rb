@@ -106,24 +106,20 @@ module Dolos
 
     def product_l(other_parser)
       combine do |value1, capture1|
-        other_parser.map_value do |value2|
-          [value1, value2]
+        other_parser.map_value do |_|
+          value1
         end.map_captures do |capture2|
           [capture1, capture2].flatten
-        end.map_value do |combined|
-          combined.first
         end
       end
     end
 
     def product_r(other_parser)
-      combine do |value1, capture1|
+      combine do |_, capture1|
         other_parser.map_value do |value2|
-          [value1, value2]
+          value2
         end.map_captures do |capture2|
           [capture1, capture2].flatten
-        end.map_value do |combined|
-          combined.last
         end
       end
     end
