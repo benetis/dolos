@@ -12,10 +12,10 @@ RSpec.describe 'parse json' do
       (c("\"") >> char_while(->(ch) { ch != "\"" }) << c("\""))
     end
     let(:boolean) do
-      (c("true") | c("false"))
+      (c("true").map_value { true } | c("false").map_value { false })
     end
     let(:null) do
-      c("null")
+      c("null").map_value { nil }
     end
     let(:array) do
       recursive do |arr|
@@ -29,7 +29,7 @@ RSpec.describe 'parse json' do
 
     let(:key_line) do
       ((string_literal << ws_rep0) << c(":") & ws_rep0 >> value).map_value do |tuple|
-        {tuple[0] => tuple[1]}
+        { tuple[0] => tuple[1] }
       end
     end
 
@@ -40,7 +40,6 @@ RSpec.describe 'parse json' do
         end
       end
     end
-
 
     let(:object) do
       recursive do |obj|
@@ -177,6 +176,37 @@ RSpec.describe 'parse json' do
       end
     end
 
+    context 'when ruby transformations' do
+      it 'converts "null" to nil' do
+        json = '{ "key": null }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => nil })
+      end
+
+      it 'converts "true" to true' do
+        json = '{ "key": true }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => true })
+      end
+
+      it 'converts "false" to false' do
+        json = '{ "key": false }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => false })
+      end
+
+      it 'does not convert "true" inside a string to true' do
+        json = '{ "key": "true" }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => "true" })
+      end
+
+    end
+
     context 'random examples' do
       it 'parses badly formatted vscode settings excerpt' do
         json = <<-JSON
@@ -189,13 +219,12 @@ RSpec.describe 'parse json' do
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
         expect(result.value).to eq({
-          "files.watcherExclude" => {
-            "**/.bloop" => "true",
-            "**/.metals" => "true",
-            "**/.ammonite" => "true",
-            "**/.history" => "true"
-          }
-        })
+                                     "files.watcherExclude" => {
+                                       "**/.bloop" => true,
+                                       "**/.metals" => true,
+                                       "**/.ammonite" => true,
+                                       "**/.history" => true, }
+                                   })
       end
     end
 
