@@ -111,8 +111,7 @@ module Dolos
       end
     end
 
-
-    # Alpha version, in-development
+    # Unstable
     def recursive(&block)
       recursive_parser = nil
 

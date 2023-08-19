@@ -168,6 +168,7 @@ module Dolos
     end
     alias_method :opt, :optional
 
+    # Unstable
     def lazy
       parser_memo = nil
 
