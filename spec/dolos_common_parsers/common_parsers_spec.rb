@@ -20,7 +20,7 @@ RSpec.describe Dolos::CommonParsers do
       result = parser.run('1')
 
       expect(result.success?).to be_truthy
-      expect(result.captures).to eq(['1'])
+      expect(result.captures).to eq([1])
     end
   end
 
