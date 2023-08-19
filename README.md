@@ -111,9 +111,19 @@ pp result.captures
 ```
 ### Roadmap
 - Better error handling
-- Recursive parser
 - Benchmarks & parser tests
 - Documentation
+- Performance
+
+### Benchmarks
+`bundle exec ruby benchmarks/json/json.rb`
+```
+Calculating -------------------------------------
+nested json benchmark
+                          0.090  (± 0.0%) i/s -      6.000  in  66.952366s
+```
+Its very slow, not ready for use yet. API is unstable is as well.
+
 
 ### Contributing
 Contributors are welcome. Note: since library is not yet stable, I recommend getting in touch with me before starting to work on something.

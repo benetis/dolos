@@ -24,7 +24,13 @@ RSpec.describe 'parse json' do
     end
 
     let(:negative_sign) { c("-").opt }
-    let(:number) { (negative_sign & digits).map { |tuple| tuple.join.to_i } }
+
+    let(:decimal_point) { c('.').opt }
+    let(:number) do
+      (negative_sign & digits & decimal_point & digits.opt).map do |tuple|
+        tuple.join.to_f
+      end
+    end
 
     let(:value) do
       number | object | string_literal | boolean | null | array
@@ -88,6 +94,13 @@ RSpec.describe 'parse json' do
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
         expect(result.value).to eq({ "key" => -1 })
+      end
+
+      it 'supports decimal numbers' do
+        json = '{ "key": 1.1 }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => 1.1 })
       end
 
       it 'supports string literals as values' do
