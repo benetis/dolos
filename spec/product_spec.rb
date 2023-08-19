@@ -66,4 +66,40 @@ RSpec.describe Dolos do
 
   end
 
+  describe 'product_l' do
+    it 'combines two parsers and return left value' do
+      parser = string('hello') << string('world')
+      result = parser.run('helloworld')
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq('hello')
+    end
+
+    it 'combines three parsers and return left value' do
+      parser = string('hello') << string('world') << string('!')
+      result = parser.run('helloworld!')
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq('hello')
+    end
+  end
+
+  describe 'product_r' do
+    it 'combines two parsers and return right value' do
+      parser = string('hello') >> string('world')
+      result = parser.run('helloworld')
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq('world')
+    end
+
+    it 'combines three parsers and return right value' do
+      parser = string('hello') >> string('world') >> string('!')
+      result = parser.run('helloworld!')
+
+      expect(result.success?).to be_truthy
+      expect(result.value).to eq('!')
+    end
+  end
+
 end
