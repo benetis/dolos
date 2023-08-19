@@ -103,18 +103,27 @@ RSpec.describe Dolos do
 
       it 'parses 1+2+3 and returns captures' do
         result = expression.run('1+2+3')
-        puts result.inspect
+
         expect(result.success?).to be_truthy
         expect(result.captures).to eq([1, "+", 2, "+", 3])
       end
 
       it 'parses 1+2*3 and returns captures' do
         result = expression.run('1+2*3')
-        puts result.inspect
+
         expect(result.success?).to be_truthy
         expect(result.captures).to eq([1, "+", 2, "*", 3])
       end
 
+    end
+
+    context 'when nested' do
+      it 'parses 1+(2*3)' do
+        result = expression.run('1+(2*3)')
+
+        expect(result.success?).to be_truthy
+        expect(result.captures).to eq([1, "+", 2, "*", 3])
+      end
     end
 
   end
