@@ -100,6 +100,15 @@ RSpec.describe Dolos do
       expect(result.captures).to eq(['!'])
       expect(result.value).to eq('hello')
     end
+
+    it 'will not duplicate captures' do
+      parser = string('hello').capture! << string('world').capture! << string('!')
+      result = parser.run('helloworld!')
+
+      expect(result.success?).to be_truthy
+      expect(result.captures).to eq(['hello', 'world'])
+      expect(result.value).to eq('hello')
+    end
   end
 
   describe 'product_r' do
@@ -134,6 +143,15 @@ RSpec.describe Dolos do
 
       expect(result.success?).to be_truthy
       expect(result.captures).to eq(['hello'])
+      expect(result.value).to eq('!')
+    end
+
+    it 'will not duplicate captures' do
+      parser = string('hello').capture! >> string('world').capture! >> string('!')
+      result = parser.run('helloworld!')
+
+      expect(result.success?).to be_truthy
+      expect(result.captures).to eq(['hello', 'world'])
       expect(result.value).to eq('!')
     end
   end

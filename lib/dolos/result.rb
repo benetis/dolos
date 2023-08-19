@@ -16,16 +16,16 @@ module Dolos
     # can be some named capture, :street, {:street => capture }
     # or an array, [], [capture]
     def capture!(wrap_in = nil)
+      mapped_value = self.value  # use the transformed value here
+
       if wrap_in.is_a?(Array)
-        save_capture([value])
+        save_capture([mapped_value])
       elsif wrap_in.is_a?(Symbol)
-        save_capture({ wrap_in => value })
+        save_capture({ wrap_in => mapped_value })
       else
-        save_capture(value)
+        save_capture(mapped_value)
       end
     end
-
-
 
     def inspect
       "Success(value: '#{value}',length: #{length}, capture: '#{captures}')"

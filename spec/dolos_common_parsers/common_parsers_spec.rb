@@ -14,9 +14,9 @@ RSpec.describe Dolos::CommonParsers do
     end
   end
 
-  describe 'digit' do
+  describe 'int' do
     it 'converts to integer' do
-      parser = digit
+      parser = int.capture!
       result = parser.run('1')
 
       expect(result.success?).to be_truthy

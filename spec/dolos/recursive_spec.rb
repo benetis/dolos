@@ -96,7 +96,6 @@ RSpec.describe Dolos do
 
       it 'parses 1+2 and returns captures' do
         result = expression.run('1+2')
-        puts result.inspect
         expect(result.success?).to be_truthy
         expect(result.captures).to eq([1, "+", 2])
       end
