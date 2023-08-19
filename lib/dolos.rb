@@ -62,6 +62,17 @@ module Dolos
       end
     end
 
+    def map(&block)
+      Parser.new do |state|
+        result = run_with_state(state)
+        if result.success?
+          Success.new(block.call(result.value), result.length, block.call(result.captures))
+        else
+          result
+        end
+      end
+    end
+
     def combine(&block)
       Parser.new do |state|
         result = run_with_state(state)

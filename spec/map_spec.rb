@@ -3,7 +3,7 @@
 RSpec.describe Dolos do
   include Dolos
 
-  describe 'map' do
+  describe 'map_value' do
     it 'maps over one parser' do
       parser = string('hello').map_value { |value| value.upcase }
       result = parser.run('hello')
@@ -26,7 +26,9 @@ RSpec.describe Dolos do
       result = parser.run('helloworld!')
       expect(result.value.flatten).to eq(['HELLO', 'WORLD', '!'])
     end
+  end
 
+  describe 'map_captures' do
     it 'maps over parsers and converts them to ints' do
       parser = (string("1") & string("2") & string("3")).capture!.flatten.map_captures { |value| value.map(&:to_i) }
 
@@ -51,7 +53,16 @@ RSpec.describe Dolos do
       result = parser.run("1234")
       expect(result.captures).to eq(21)
     end
+  end
 
+  describe 'map' do
+    it 'maps both values and captures' do
+      parser = (string("1") & string("2")).capture!.map { |value| value.map(&:to_i) }
+
+      result = parser.run("12")
+      expect(result.captures).to eq([1, 2])
+      expect(result.value).to eq([1, 2])
+    end
   end
 
 end
