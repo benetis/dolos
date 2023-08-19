@@ -32,6 +32,7 @@ greet_and_speak.run("Hello, Parsers are great!") # <Result::Success>
 ```
 
 ### Letter address parser example
+
 ```ruby
 require 'dolos'
 require 'dolos_common_parsers/common_parsers'
@@ -63,8 +64,8 @@ alpha_with_lt = char_in("ąčęėįšųūžĄČĘĖĮŠŲŪŽ") | alpha
 
 # Capture all letters in a row and join them,
 # because they are captured as elements of array by each alpha_with_lt parser.
-first_name = alpha_with_lt.rep.capture!.map(&:join)
-last_name = alpha_with_lt.rep.capture!.map(&:join)
+first_name = alpha_with_lt.rep.capture!.map_captures(&:join)
+last_name = alpha_with_lt.rep.capture!.map_captures(&:join)
 
 # Combine first line parsers
 # Consume zero or more whitespace, after that honorific must follow and so on
@@ -78,7 +79,7 @@ quote_open = c("„")
 quote_close = c("“")
 
 # Consume LT alphabet with whitespace
-company_name = (alpha_with_lt | ws).rep.capture!.map(&:join)
+company_name = (alpha_with_lt | ws).rep.capture!.map_captures(&:join)
 company_info = company_type & ws.rep0 & quote_open & company_name & quote_close
 second_line = ws.rep0 & company_info & eol
 
@@ -90,16 +91,16 @@ second_line = ws.rep0 & company_info & eol
 # Also while mapping, doing some cleaning with '.strip'
 street_name = char_while(->(char) { !char.match(/\d/) })
   .capture!
-  .map(&:first)
-  .map { |s| { street: s.strip } }
-building = digits.capture!.map(&:first).map { |s| { building: s.strip } }
+  .map_captures(&:first)
+  .map_captures { |s| { street: s.strip } }
+building = digits.capture!.map_captures(&:first).map_captures { |s| { building: s.strip } }
 address_line = ws.rep0 & street_name & building & eol
 
 # City line
 # All digits can be matched here or 'digits.rep(5)' could be used. 
 # Also joining with map results.
-postcode = digits.capture!.map(&:join).map { |s| { postcode: s.strip } }
-city = alpha_with_lt.rep.capture!.map(&:join).map { |s| { city: s.strip } }
+postcode = digits.capture!.map_captures(&:join).map_captures { |s| { postcode: s.strip } }
+city = alpha_with_lt.rep.capture!.map_captures(&:join).map_captures { |s| { city: s.strip } }
 city_line = ws.rep0 & postcode & ws & city & eol
 
 # Full letter parser which is combined from all previous parsers.

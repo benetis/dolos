@@ -40,7 +40,7 @@ module Dolos
       end
     end
 
-    def map(&block)
+    def map_captures(&block)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
@@ -62,6 +62,17 @@ module Dolos
       end
     end
 
+    def map(&block)
+      Parser.new do |state|
+        result = run_with_state(state)
+        if result.success?
+          Success.new(block.call(result.value), result.length, block.call(result.captures))
+        else
+          result
+        end
+      end
+    end
+
     def combine(&block)
       Parser.new do |state|
         result = run_with_state(state)
@@ -77,7 +88,7 @@ module Dolos
     end
 
     def flatten
-      map do |captures|
+      map_captures do |captures|
         captures.flatten
       end
     end
@@ -86,7 +97,7 @@ module Dolos
       combine do |value1, capture1|
         other_parser.map_value do |value2|
           [value1, value2]
-        end.map do |capture2|
+        end.map_captures do |capture2|
           [capture1, capture2].flatten
         end
       end
@@ -97,7 +108,7 @@ module Dolos
       combine do |value1, capture1|
         other_parser.map_value do |value2|
           [value1, value2]
-        end.map do |capture2|
+        end.map_captures do |capture2|
           [capture1, capture2].flatten
         end.map_value do |combined|
           combined.first
@@ -109,7 +120,7 @@ module Dolos
       combine do |value1, capture1|
         other_parser.map_value do |value2|
           [value1, value2]
-        end.map do |capture2|
+        end.map_captures do |capture2|
           [capture1, capture2].flatten
         end.map_value do |combined|
           combined.last
