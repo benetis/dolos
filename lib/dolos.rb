@@ -94,16 +94,26 @@ module Dolos
     alias_method :&, :product
 
     def product_l(other_parser)
-      combine do |value1, _|
-        other_parser.map_value do |_|
-          value1
+      combine do |value1, capture1|
+        other_parser.map_value do |value2|
+          [value1, value2]
+        end.map do |capture2|
+          [capture1, capture2].flatten
+        end.map_value do |combined|
+          combined.first
         end
       end
     end
 
     def product_r(other_parser)
-      combine do |_, _|
-        other_parser
+      combine do |value1, capture1|
+        other_parser.map_value do |value2|
+          [value1, value2]
+        end.map do |capture2|
+          [capture1, capture2].flatten
+        end.map_value do |combined|
+          combined.last
+        end
       end
     end
 
