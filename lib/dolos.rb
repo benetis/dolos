@@ -168,7 +168,8 @@ module Dolos
     end
     alias_method :opt, :optional
 
-    # Unstable
+    # Unstable API
+    # Used to declare lazy parser to avoid infinite loops in recursive parsers
     def lazy
       parser_memo = nil
 
