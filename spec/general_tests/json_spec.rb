@@ -17,9 +17,14 @@ RSpec.describe 'parse json' do
     let(:null) do
       c("null")
     end
+    let(:array) do
+      recursive do |arr|
+        c("[") >> ws_rep0 >> value.repeat(n_min: 0, separator: (comma << ws_rep0)) << ws_rep0 << c("]")
+      end
+    end
 
     let(:value) do
-      digit | object | string_literal | boolean | null
+      digit | object | string_literal | boolean | null | array
     end
 
     let(:key_line) do
@@ -117,6 +122,45 @@ RSpec.describe 'parse json' do
 
         expect(result.success?).to be_truthy
         expect(result.value).to eq({ "key" => { "key2" => "1", "key3" => "2" } })
+      end
+
+      it 'parses nested objects inside arrays' do
+        json = '[{ "key": { "key2": 1 } }]'
+
+        result = json_parser.run(json)
+
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([{ "key" => { "key2" => "1" } }])
+      end
+    end
+
+    context 'when dealing with arrays' do
+      it 'parses an empty array' do
+        json = '[]'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([])
+      end
+
+      it 'parses an array with values' do
+        json = '[1, "string", true]'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(["1", "string", "true"])
+      end
+
+      it 'parses nested arrays' do
+        json = '[1, [2, 3], ["a", "b"]]'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq(["1", ["2", "3"], ["a", "b"]])
+      end
+
+      it 'parses arrays inside objects' do
+        json = '{ "key": [1, 2, 3] }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => ["1", "2", "3"] })
       end
     end
 
