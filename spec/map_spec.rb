@@ -57,7 +57,7 @@ RSpec.describe Dolos do
 
   describe 'map' do
     it 'maps both values and captures' do
-      parser = (string("1") & string("2")).capture!.map { |value| value.map(&:to_i) }
+      parser = (string("1") & string("2")).capture!.map(&:to_i)
 
       result = parser.run("12")
       expect(result.captures).to eq([1, 2])

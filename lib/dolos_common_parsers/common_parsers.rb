@@ -10,9 +10,12 @@ module Dolos
       regex(/\n|\r\n|\r/)
     end
 
-    # Capture as String and convert to integer
     def digit
-      regex(/\d/).capture!.map_captures { |capt| capt.map(&:to_i) }
+      regex(/\d/)
+    end
+
+    def int
+      digit.capture!.map(&:to_i)
     end
 
     # Capture as string

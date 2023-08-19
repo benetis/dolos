@@ -40,6 +40,7 @@ module Dolos
       end
     end
 
+    # Will call block on captures
     def map_captures(&block)
       Parser.new do |state|
         result = run_with_state(state)
@@ -51,6 +52,7 @@ module Dolos
       end
     end
 
+    # Will call block on tuple of value
     def map_value(&block)
       Parser.new do |state|
         result = run_with_state(state)
@@ -62,11 +64,17 @@ module Dolos
       end
     end
 
+    # Will call block on each element of value or capture
     def map(&block)
       Parser.new do |state|
         result = run_with_state(state)
         if result.success?
-          Success.new(block.call(result.value), result.length, block.call(result.captures))
+          if result.value.is_a?(Array)
+            new_value = result.value.map(&block)
+          else
+            new_value = block.call(result.value)
+          end
+          Success.new(new_value, result.length, result.captures.map(&block))
         else
           result
         end
