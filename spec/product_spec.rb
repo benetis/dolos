@@ -7,28 +7,28 @@ RSpec.describe Dolos do
 
     context 'when success' do
       it 'combines two parsers' do
-        parser = string('hello') >> string('world')
+        parser = string('hello') & string('world')
         result = parser.run('helloworld')
 
         expect(result.success?).to be_truthy
       end
 
       it 'combines three parsers' do
-        parser = string('hello') >> string('world') >> string('!')
+        parser = string('hello') & string('world') & string('!')
         result = parser.run('helloworld!')
 
         expect(result.success?).to be_truthy
       end
 
       it 'combines four parsers' do
-        parser = string('hello') >> string('world') >> string('!') >> string('!')
+        parser = string('hello') & string('world') & string('!') & string('!')
         result = parser.run('helloworld!!')
 
         expect(result.success?).to be_truthy
       end
 
       it 'combines five parsers' do
-        parser = string('hello') >> string(' ') >> string('world') >> string(',') >> string(' and universe')
+        parser = string('hello') & string(' ') & string('world') & string(',') & string(' and universe')
         result = parser.run('hello world, and universe')
 
         expect(result.success?).to be_truthy
@@ -37,7 +37,7 @@ RSpec.describe Dolos do
 
     context 'when failure' do
       it 'tries to combine two parsers and returns failure' do
-        parser = string('hello') >> string('world')
+        parser = string('hello') & string('world')
         result = parser.run('helloX')
 
         expect(result.failure?).to be_truthy
@@ -47,11 +47,21 @@ RSpec.describe Dolos do
 
     context 'when returning a value' do
       it 'returns parse value' do
-        parser = string('hello') >> string('X')
+        parser = string('hello') & string('X')
         result = parser.run('helloX')
 
         expect(result.value).to eq(['hello', 'X'])
       end
+    end
+
+    context 'when working with values' do
+      it 'returns parse value and groups them' do
+        parser = string('hello') & (string('X') & string('!'))
+        result = parser.run('helloX!')
+
+        expect(result.value).to eq(['hello', ['X', '!']])
+      end
+
     end
 
   end

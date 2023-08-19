@@ -13,7 +13,7 @@ module Dolos
       @captures = captures
     end
 
-    # can be some named capture, :street, {:steet => capture }
+    # can be some named capture, :street, {:street => capture }
     # or an array, [], [capture]
     def capture!(wrap_in = nil)
       if wrap_in.is_a?(Array)

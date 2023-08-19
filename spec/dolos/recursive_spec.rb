@@ -10,7 +10,7 @@ RSpec.describe Dolos do
     context 'when successful' do
       it 'repeats a parser' do
         parser = recursive do |content|
-          string('hello').lazy >> content.opt
+          string('hello').lazy & content.opt
         end
 
         result = parser.run('hellohellohello')
@@ -23,7 +23,7 @@ RSpec.describe Dolos do
         bracketed = recursive do |content|
           open_bracket = c('(')
           close_bracket = c(')')
-          open_bracket >> content.opt >> close_bracket
+          open_bracket & content.opt & close_bracket
         end
 
         result = bracketed.run('(())')
@@ -36,8 +36,8 @@ RSpec.describe Dolos do
         bracketed = recursive do |content|
           open_bracket = c('(')
           close_bracket = c(')')
-          open_bracket >>
-            (content | string('hello').capture!).opt >>
+          open_bracket &
+            (content | string('hello').capture!).opt &
             close_bracket
         end
 
@@ -53,7 +53,7 @@ RSpec.describe Dolos do
   context 'when failure' do
     it 'fails if parser fails' do
       parser = recursive do |content|
-        string('hello') >> content.opt
+        string('hello') & content.opt
       end
 
       result = parser.run('goodbyehello')
@@ -64,20 +64,20 @@ RSpec.describe Dolos do
 
   context 'when recursive parsers reference each other' do
     let(:digits_int) { digits.capture!.map(&:first).map(&:to_i) }
-    let(:paren_expr) { (c('(') >> expression.lazy >> c(')')) }
+    let(:paren_expr) { (c('(') & expression.lazy & c(')')) }
     let(:factor) do
       paren_expr | digits_int
     end
 
     let(:divide_multiple) do
       recursive do |expr_placeholder|
-        (factor >> ((c('*') | c('/')).capture! >> expr_placeholder).opt)
+        (factor & ((c('*') | c('/')).capture! & expr_placeholder).opt)
       end
     end
 
     let(:expression) {
       recursive do |expr_placeholder|
-        (divide_multiple.lazy >> ((c('+') | c('-')).capture! >> expr_placeholder).opt)
+        (divide_multiple.lazy & ((c('+') | c('-')).capture! & expr_placeholder).opt)
       end
     }
 

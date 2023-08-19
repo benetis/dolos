@@ -80,7 +80,7 @@ RSpec.describe Dolos::Parsers do
       it 'parses two regexes' do
         digits = regex(/\d+/)
         letters = regex(/[a-z]+/)
-        parser = digits >> letters
+        parser = digits & letters
         result = parser.run('123abc')
 
         expect(result.success?).to be_truthy
@@ -90,7 +90,7 @@ RSpec.describe Dolos::Parsers do
       it 'parses three regexes' do
         digits = regex(/\d+/)
         letters = regex(/[a-z]+/)
-        parser = letters >> digits >> letters
+        parser = letters & digits & letters
         result = parser.run('a123abchello')
 
         expect(result.success?).to be_truthy
@@ -101,7 +101,7 @@ RSpec.describe Dolos::Parsers do
         digits = regex(/\d+/)
         hello = c('hello')
 
-        parser = digits >> hello
+        parser = digits & hello
         result = parser.run('123hello')
 
         expect(result.success?).to be_truthy
@@ -112,7 +112,7 @@ RSpec.describe Dolos::Parsers do
         digits = regex(/\d+/)
         hello = c('hello')
 
-        parser = hello >> digits
+        parser = hello & digits
         result = parser.run('hello123')
 
         expect(result.success?).to be_truthy
@@ -122,7 +122,7 @@ RSpec.describe Dolos::Parsers do
       it 'fails because regex consumes all the letters' do
         digits = regex(/\d+/)
         letters = regex(/[a-z]+/)
-        parser = letters >> digits >> letters >> c("missing")
+        parser = letters & digits & letters & c("missing")
         result = parser.run('a123abchellomissing')
 
         expect(result.failure?).to be_truthy
@@ -139,7 +139,7 @@ RSpec.describe Dolos::Parsers do
       end
 
       it 'parses special characters and does product' do
-        parser = regex(/ąąąą/) >> regex(/žžžž/)
+        parser = regex(/ąąąą/) & regex(/žžžž/)
         result = parser.run('ąąąąžžžž')
 
         expect(result.success?).to be_truthy
@@ -157,7 +157,7 @@ RSpec.describe Dolos::Parsers do
 
       it 'works with repeat and product' do
         ws = regex(/\s/)
-        parser = ws.rep >> c("123")
+        parser = ws.rep & c("123")
         result = parser.run('   123')
 
         expect(result.success?).to be_truthy
@@ -166,7 +166,7 @@ RSpec.describe Dolos::Parsers do
 
       it 'doesnt overconsume' do
         ws = regex(/\s/)
-        parser = ws.rep >> c("123")
+        parser = ws.rep & c("123")
         result = parser.run('   123  ')
 
         expect(result.success?).to be_truthy
@@ -206,7 +206,7 @@ RSpec.describe Dolos::Parsers do
 
     context 'with combinators' do
       it 'parses a single character and chains' do
-        parser = any_char >> any_char >> any_char
+        parser = any_char & any_char & any_char
         result = parser.run('šįėę')
 
         expect(result.success?).to be_truthy
@@ -214,12 +214,12 @@ RSpec.describe Dolos::Parsers do
       end
 
       it 'captures a date' do
-        year = c("Year: ") >> any_char.rep(4).map(&:join).capture!
-        month = c("Month: ") >> any_char.rep(2).map(&:join).capture!
-        day = c("Day: ") >> any_char.rep(2).map(&:join).capture!
+        year = c("Year: ") & any_char.rep(4).map(&:join).capture!
+        month = c("Month: ") & any_char.rep(2).map(&:join).capture!
+        day = c("Day: ") & any_char.rep(2).map(&:join).capture!
         sep = c(", ")
 
-        parser = year >> sep >> month >> sep >> day
+        parser = year & sep & month & sep & day
 
         result = parser.run('Year: 2019, Month: 01, Day: 01')
         expect(result.success?).to be_truthy
@@ -246,7 +246,7 @@ RSpec.describe Dolos::Parsers do
     end
 
     it 'parses a single character with product' do
-      parser = char_in('abc') >> char_in('def')
+      parser = char_in('abc') & char_in('def')
       result = parser.run('ad')
 
       expect(result.success?).to be_truthy
@@ -273,7 +273,7 @@ RSpec.describe Dolos::Parsers do
     context 'with combinators' do
       it 'should consume all non-whitespace characters' do
         non_whitespace_parser = char_while(->(char) { !char.match?(/\s/) })
-        parser = non_whitespace_parser >> c(" ") >> c('world')
+        parser = non_whitespace_parser & c(" ") & c('world')
         result = parser.run("hello world")
 
         expect(result.success?).to be_truthy
