@@ -27,8 +27,8 @@ alpha_with_lt = char_in("ąčęėįšųūžĄČĘĖĮŠŲŪŽ") | alpha
 
 # Capture all letters in a row and join them,
 # because they are captured as elements of array by each alpha_with_lt parser.
-first_name = alpha_with_lt.rep.capture!.map_captures(&:join)
-last_name = alpha_with_lt.rep.capture!.map_captures(&:join)
+first_name = alpha_with_lt.rep.map(&:join).capture!
+last_name = alpha_with_lt.rep.map(&:join).capture!
 
 # Combine first line parsers
 # Consume zero or more whitespace, after that honorific must follow and so on
@@ -42,7 +42,7 @@ quote_open = c("„")
 quote_close = c("“")
 
 # Consume LT alphabet with whitespace
-company_name = (alpha_with_lt | ws).rep.capture!.map_captures(&:join)
+company_name = (alpha_with_lt | ws).rep.map(&:join).capture!
 company_info = company_type & ws.rep0 & quote_open & company_name & quote_close
 second_line = ws.rep0 & company_info & eol
 
@@ -52,14 +52,14 @@ second_line = ws.rep0 & company_info & eol
 # After that result is captured and mapped to hash
 # Mapping to hash so at the end its easy to tell tuples apart
 # Also while mapping, doing some cleaning with '.strip'
-street_name = char_while(->(char) { !char.match(/\d/) }).capture!.map_captures(&:first).map_captures { |s| { street: s.strip } }
-building = digits.capture!.map_captures(&:first).map_captures { |s| { building: s.strip } }
+street_name = char_while(->(char) { !char.match(/\d/) }).map { |s| { street: s.strip } }.capture!
+building = digits.map { |s| { building: s.strip } }.capture!
 address_line = ws.rep0 & street_name & building & eol
 
 # City line
 # All digits can be matched here or 'digits.rep(5)' could be used. Also joining with map.
-postcode = digits.capture!.map_captures(&:join).map_captures { |s| { postcode: s.strip } }
-city = alpha_with_lt.rep.capture!.map_captures(&:join).map_captures { |s| { city: s.strip } }
+postcode = digits.map { |s| { postcode: s.strip } }.capture!
+city = alpha_with_lt.rep.map(&:join).map { |s| { city: s.strip } }.capture!
 city_line = ws.rep0 & postcode & ws & city & eol
 
 # Full letter parser which is combined from all previous parsers. All previous parsers can be ran separately.
