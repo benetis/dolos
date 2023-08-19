@@ -24,7 +24,7 @@ RSpec.describe 'parse json' do
     end
 
     let(:value) do
-      digit | object | string_literal | boolean | null | array
+      digits.map_value(&:to_i) | object | string_literal | boolean | null | array
     end
 
     let(:key_line) do
@@ -63,11 +63,11 @@ RSpec.describe 'parse json' do
         json = '{ "key": 1 }'
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
-        expect(result.value).to eq({ "key" => "1" })
+        expect(result.value).to eq({ "key" => 1 })
       end
 
       it 'supports multiple keys' do
-        json = '{ "key": 1, "key2": 2 }'
+        json = '{ "key": "1", "key2": "2" }'
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
         expect(result.value).to eq({ "key" => "1", "key2" => "2" })
@@ -84,14 +84,14 @@ RSpec.describe 'parse json' do
         json = '{ "key": true }'
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
-        expect(result.value).to eq({ "key" => "true" })
+        expect(result.value).to eq({ "key" => true })
       end
 
       it 'supports null literals as values' do
         json = '{ "key": null }'
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
-        expect(result.value).to eq({ "key" => "null" })
+        expect(result.value).to eq({ "key" => nil })
       end
 
       it 'supports multiline jsons' do
@@ -104,13 +104,13 @@ RSpec.describe 'parse json' do
         JSON
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
-        expect(result.value).to eq({ "key" => "1", "key2" => "2", "key3" => "3" })
+        expect(result.value).to eq({ "key" => 1, "key2" => 2, "key3" => 3 })
       end
     end
 
     context 'when recursive' do
       it 'parses an object inside object' do
-        json = '{ "key": { "key2": 1 } }'
+        json = '{ "key": { "key2": "1" } }'
 
         result = json_parser.run(json)
 
@@ -119,7 +119,7 @@ RSpec.describe 'parse json' do
       end
 
       it 'parse an object inside object inside object' do
-        json = '{ "key": { "key2": { "key3": 1 } } }'
+        json = '{ "key": { "key2": { "key3": "1" } } }'
 
         result = json_parser.run(json)
 
@@ -133,11 +133,11 @@ RSpec.describe 'parse json' do
         result = json_parser.run(json)
 
         expect(result.success?).to be_truthy
-        expect(result.value).to eq({ "key" => { "key2" => "1", "key3" => "2" } })
+        expect(result.value).to eq({ "key" => { "key2" => 1, "key3" => 2 } })
       end
 
       it 'parses nested objects inside arrays' do
-        json = '[{ "key": { "key2": 1 } }]'
+        json = '[{ "key": { "key2": "1" } }]'
 
         result = json_parser.run(json)
 
@@ -158,21 +158,35 @@ RSpec.describe 'parse json' do
         json = '[1, "string", true]'
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
-        expect(result.value).to eq(["1", "string", "true"])
+        expect(result.value).to eq([1, "string", true])
+      end
+
+      it 'parses digits as ints' do
+        json = '[1, 2, 3]'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq([1, 2, 3])
       end
 
       it 'parses nested arrays' do
         json = '[1, [2, 3], ["a", "b"]]'
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
-        expect(result.value).to eq(["1", ["2", "3"], ["a", "b"]])
+        expect(result.value).to eq([1, [2, 3], ["a", "b"]])
       end
 
       it 'parses arrays inside objects' do
         json = '{ "key": [1, 2, 3] }'
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
-        expect(result.value).to eq({ "key" => ["1", "2", "3"] })
+        expect(result.value).to eq({ "key" => [1, 2, 3] })
+      end
+
+      it 'parses arrays inside arrays inside objects' do
+        json = '{ "key": [[1, 2], [3, 4]] }'
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => [[1, 2], [3, 4]] })
       end
     end
 
@@ -225,6 +239,57 @@ RSpec.describe 'parse json' do
                                        "**/.ammonite" => true,
                                        "**/.history" => true, }
                                    })
+      end
+
+      it 'parses a mix of random values and deep nested objects' do
+        json = <<-JSON
+        {
+          "level1": {
+            "key1": "true",
+            "key2": true,
+            "key3": {
+              "key3.1": "false",
+              "key3.2": false,
+              "key3.3": {
+                "key3.3.1": null,
+                "key3.3.2": "null",
+                "key3.3.3": {
+                  "key3.3.3.1": [1, 2, 3, "4", true, false, "true", "false", null],
+                  "key3.3.3.2": {
+                    "a": "a",
+                    "b": "b",
+                    "1": 1,
+                    "weird_key_with_special_chars@!#": "weird_value"
+                  }
+                }
+              }
+            },
+            "key4": [1, "2", { "key": "value" }, ["nested", "array", { "nested_key": "nested_value" }], null]
+          },
+          "level2": {
+            "true": false,
+            "false": "true",
+            "null": "null",
+            "complex_array": [
+              {
+                "array_key1": "value1",
+                "array_key2": {
+                  "nested_key": [1, 2, 3, { "deeply_nested_key": "deep_value" }]
+                }
+              },
+              "random_string",
+              false,
+              null,
+              "true",
+              12345
+            ]
+          }
+        }
+        JSON
+
+        result = json_parser.run(json)
+
+        expect(result.success?).to be_truthy
       end
     end
 
