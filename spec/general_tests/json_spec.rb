@@ -34,7 +34,7 @@ RSpec.describe 'parse json' do
     end
 
     let(:key_lines) do
-      (key_line << ws_rep0).repeat(n_min: 1, separator: (comma << ws_rep0)).map_value do |arr|
+      (key_line << ws_rep0).repeat(n_min: 1, separator: (comma << ws_rep0 << eol.opt)).map_value do |arr|
         arr.reduce({}) do |acc, hash|
           acc.merge(hash)
         end
@@ -49,7 +49,7 @@ RSpec.describe 'parse json' do
     end
 
     let(:json_parser) do
-      value
+      ws_rep0 >> value
     end
 
     context 'when basic scenarios without recursion' do
@@ -93,6 +93,19 @@ RSpec.describe 'parse json' do
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
         expect(result.value).to eq({ "key" => "null" })
+      end
+
+      it 'supports multiline jsons' do
+        json = <<-JSON
+        {
+          "key": 1,
+          "key2": 2,
+          "key3": 3
+        }
+        JSON
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({ "key" => "1", "key2" => "2", "key3" => "3" })
       end
     end
 
@@ -161,6 +174,28 @@ RSpec.describe 'parse json' do
         result = json_parser.run(json)
         expect(result.success?).to be_truthy
         expect(result.value).to eq({ "key" => ["1", "2", "3"] })
+      end
+    end
+
+    context 'random examples' do
+      it 'parses badly formatted vscode settings excerpt' do
+        json = <<-JSON
+        {            "files.watcherExclude": {            "**/.bloop": true,
+            "**/.metals": true,
+            "**/.ammonite": true,            "**/.history": true
+          }
+        }
+        JSON
+        result = json_parser.run(json)
+        expect(result.success?).to be_truthy
+        expect(result.value).to eq({
+          "files.watcherExclude" => {
+            "**/.bloop" => "true",
+            "**/.metals" => "true",
+            "**/.ammonite" => "true",
+            "**/.history" => "true"
+          }
+        })
       end
     end
 
