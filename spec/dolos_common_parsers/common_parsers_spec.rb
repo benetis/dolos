@@ -14,6 +14,22 @@ RSpec.describe Dolos::CommonParsers do
     end
   end
 
+  describe 'ws_rep0' do
+    it 'parses one or more whitespace' do
+      parser = ws_rep0
+      result = parser.run('   ')
+
+      expect(result.success?).to be_truthy
+    end
+
+    it 'parses zero whitespace' do
+      parser = ws_rep0
+      result = parser.run('')
+
+      expect(result.success?).to be_truthy
+    end
+  end
+
   describe 'int' do
     it 'converts to integer' do
       parser = int.capture!

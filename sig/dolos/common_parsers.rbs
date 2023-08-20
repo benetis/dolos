@@ -1,5 +1,7 @@
 module Dolos
   module CommonParsers
     def ws: -> Parser[String]
+
+    def ws_rep0: -> Parser[String]
   end
 end

@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
 require 'benchmark/ips'
-# require 'bundler/setup'
+require 'bundler/setup'
 require 'dolos'
 require 'dolos_common_parsers/common_parsers'
 
 include Dolos
 include Dolos::CommonParsers
-
-def ws_rep0 = ws.rep0
-
 def comma = c(",")
 
 def string_literal = (c("\"") >> char_while(->(ch) { ch != "\"" }).opt << c("\""))
@@ -54,9 +51,6 @@ result = json_parser.run(json_from_file)
 puts result.success?
 
 Benchmark.ips do |x|
-  x.time = 60
-  x.warmup = 15
-
   x.report('nested json benchmark') do
     json_parser.run(json_from_file)
   end

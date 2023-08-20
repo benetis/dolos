@@ -6,6 +6,10 @@ module Dolos
       regex(/\s/)
     end
 
+    def ws_rep0
+      regex(/\s*/)
+    end
+
     def eol
       regex(/\n|\r\n|\r/)
     end
