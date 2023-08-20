@@ -55,12 +55,21 @@ module Dolos
   end
 
   class Failure < Result
-    attr_reader :message, :error_position, :state
+    attr_reader  :error_position, :state
 
-    def initialize(message, error_position, state)
-      @message = message
+    def initialize(message_proc, error_position, state)
+      @message_proc = message_proc
       @error_position = error_position
       @state = state
+      @message_evaluated = false
+    end
+
+    def message
+      unless @message_evaluated
+        @message_value = @message_proc.call
+        @message_evaluated = true
+      end
+      @message_value
     end
 
     def inspect

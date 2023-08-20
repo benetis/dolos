@@ -165,7 +165,7 @@ module Dolos
         if count < n_min
           error_pos = state.input.offset
           Failure.new(
-            "Expected parser to match at least #{n_min} times but matched only #{count} times",
+            -> { "Expected parser to match at least #{n_min} times but matched only #{count} times" },
             error_pos,
             state
           )

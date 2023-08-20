@@ -13,7 +13,7 @@ module Dolos
           got_error = state.input.io.string.byteslice(state.input.backup, advanced)
           state.input.rollback
           Failure.new(
-            "Expected #{str.inspect} but got #{got_error.inspect}",
+            -> { "Expected #{str.inspect} but got #{got_error.inspect}" },
             advanced,
             state
           )
@@ -32,7 +32,7 @@ module Dolos
           advanced = state.input.offset
           state.input.rollback
           Failure.new(
-            "Expected pattern #{pattern.inspect} but got #{state.input.io.string.inspect}",
+            -> { "Expected pattern #{pattern.inspect} but got #{state.input.io.string.inspect}" },
             advanced,
             state
           )
@@ -52,7 +52,7 @@ module Dolos
           advanced = state.input.offset
           state.input.rollback
           Failure.new(
-            'Expected any character but got end of input',
+            -> { 'Expected any character but got end of input' },
             advanced,
             state
           )
@@ -77,7 +77,7 @@ module Dolos
           advanced = state.input.offset
           state.input.rollback
           Failure.new(
-            "Expected one of #{characters_array.inspect} but got #{char.inspect}",
+            -> { "Expected one of #{characters_array.inspect} but got #{char.inspect}" },
             advanced,
             state
           )
@@ -101,7 +101,7 @@ module Dolos
         if buffer.empty?
           advanced = state.input.offset
           Failure.new(
-            "Predicate never returned true",
+            -> { "Predicate never returned true" },
             advanced,
             state
           )
@@ -120,7 +120,7 @@ module Dolos
 
         recursive_parser.call.run_with_state(state).tap do |result|
           if result.failure?
-            error_msg = "Error in recursive structure around position #{state.input.offset}: #{result.message}"
+            error_msg = -> {"Error in recursive structure around position #{state.input.offset}: #{result.message}" }
             Failure.new(error_msg, state.input.offset, state)
           end
         end
@@ -129,7 +129,6 @@ module Dolos
       recursive_parser = -> { block.call(placeholder) }
       placeholder
     end
-
 
 
   end

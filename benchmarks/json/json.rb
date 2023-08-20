@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'benchmark/ips'
+# require 'bundler/setup'
 require 'dolos'
 require 'dolos_common_parsers/common_parsers'
 

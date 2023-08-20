@@ -118,9 +118,16 @@ pp result.captures
 ### Benchmarks
 `bundle exec ruby benchmarks/json/json.rb`
 ```
+Baseline before improvements:
 Calculating -------------------------------------
 nested json benchmark     0.090  (± 0.0%) i/s -      6.000  in  66.952366s
 letter benchmark          1.710k (± 2.5%) i/s -    102.583k in  60.053243s
+
+Work in progress:
+After lazy errors -
+Calculating -------------------------------------
+nested json benchmark     2.074  (± 0.0%) i/s -    125.000  in  60.281177s
+letter benchmark	      2.137k (± 3.4%) i/s -    128.186k in  60.079965s
 ```
 Its very slow, not ready for use yet. API is unstable is as well.
 
