@@ -47,7 +47,10 @@ end
 
 def json_parser = ws_rep0 >> value
 
-json_from_file = File.read('benchmarks/json/random.json')
+json_from_file = File.read('benchmarks/json/nested_json.json')
+
+result = json_parser.run(json_from_file)
+puts result.success?
 
 Benchmark.ips do |x|
   x.time = 60
