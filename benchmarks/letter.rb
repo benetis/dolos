@@ -1,46 +1,7 @@
-# Dolos
-
-<img height="256" src="docs/dolos_stable_diff.png" width="256"/>
-
-
-### Disclaimer
-🚧 Under development, not stable yet 🚧
-
-### Parser combinator library for Ruby
-
-It does not use exceptions and instead returns a result object.
-Library is composable and concise.
-
-### Getting started
-
-#### Installation
-- Update Gemfile with `gem 'dolos'`
-- Run bundle install
-
-#### Usage
-```ruby
-require 'dolos'
-include Dolos
-
-ws = c(" ")
-parser = c("Parsers") & ws & c("are") & ws & c("great!")
-parser.run("Parsers are great!") # <Result::Success>
-
-greeter = c("Hello")
-greet_and_speak = greeter & c(", ") & parser
-greet_and_speak.run("Hello, Parsers are great!") # <Result::Success>
-```
-
-### Letter address parser example
-
-```ruby
+# frozen_string_literal: true
 require 'dolos'
 require 'dolos_common_parsers/common_parsers'
-
-include Dolos
-# frozen_string_literal: true
-require_relative 'dolos'
-require_relative 'dolos_common_parsers/common_parsers'
+require 'benchmark/ips'
 
 include Dolos
 
@@ -106,28 +67,14 @@ city_line = ws.rep0 & postcode & ws & city & eol
 letter_parser = name_line & second_line & address_line & city_line
 result = letter_parser.run(letter)
 
-pp result.captures
+puts result.success?
 
-```
-### Roadmap
-- Better error handling
-- Benchmarks & parser tests
-- Documentation
-- Performance
+Benchmark.ips do |x|
+  x.time = 60
+  x.warmup = 15
 
-### Benchmarks
-`bundle exec ruby benchmarks/json/json.rb`
-```
-Calculating -------------------------------------
-nested json benchmark     0.090  (± 0.0%) i/s -      6.000  in  66.952366s
-letter benchmark          1.710k (± 2.5%) i/s -    102.583k in  60.053243s
-```
-Its very slow, not ready for use yet. API is unstable is as well.
-
-
-### Contributing
-Contributors are welcome. Note: since library is not yet stable, I recommend getting in touch with me before starting to work on something.
-
-#### Other parser combinator libraries
-- [Fastparse](https://com-lihaoyi.github.io/fastparse/) (Scala)
-- [Parsby](https://github.com/jolmg/parsby) (Ruby)
+  x.report('letter benchmark') do
+    letter_parser.run(letter)
+  end
+  x.compare!
+end
