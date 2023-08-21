@@ -65,7 +65,7 @@ module Dolos
     # Example:
     #  char_in('abc').run('b') # => Success.new('b', 1)
     def char_in(characters_string)
-      characters_set = characters_string.chars.to_set
+      characters_set = characters_string.chars
 
       Parser.new do |state|
         state.input.mark_offset
