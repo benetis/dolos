@@ -67,11 +67,11 @@ module Dolos
     def combine(&block)
       Parser.new do |state|
         result = run_with_state(state)
+
         if result.success?
+          state.input.advance(result.length)
           new_parser = block.call(result.value, result.captures)
-          new_state = state.dup
-          new_state.input.advance(result.length)
-          new_parser.run_with_state(new_state)
+          new_parser.run_with_state(state)
         else
           result
         end

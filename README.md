@@ -122,7 +122,8 @@ Baseline before improvements:
 nested json benchmark     0.090  (± 0.0%) i/s -      0.500  in   5.000000s
 letter benchmark          1.710k (± 2.5%) i/s -      8.548k in   5.000000s
 
-> Work in progress:
+Work in progress:
+
 After lazy errors:
 nested json benchmark     2.074  (± 0.0%) i/s -     10.417  in   5.000000s
 letter benchmark          2.137k (± 3.4%) i/s -     10.682k in   5.000000s
@@ -130,6 +131,10 @@ letter benchmark          2.137k (± 3.4%) i/s -     10.682k in   5.000000s
 After ws_rep0:
 nested json benchmark     7.819  (± 0.0%) i/s -     40.000  in   5.122156s
 letter benchmark          2.891k (± 2.5%) i/s -     14.450k in   5.001678s
+
+No state.dup in combine:
+nested json benchmark     8.306  (± 0.0%) i/s -     42.000  in   5.056446s
+letter benchmark          2.964k (± 0.8%) i/s -     14.850k in   5.011192s
 ```
 Its very slow, not ready for use yet. API is unstable is as well.
 
