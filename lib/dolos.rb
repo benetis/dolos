@@ -22,21 +22,15 @@ module Dolos
     end
 
     def run_with_state(state)
-      result = parser_proc.call(state)
-      if result.success?
-        state.last_success_position = state.input.offset
-      end
+      result = @parser_proc.call(state)
+      state.last_success_position = state.input.offset if result.success?
       result
     end
 
     def capture!(wrap_in = nil)
       Parser.new do |state|
         result = run_with_state(state)
-        if result.success?
-          result.capture!(wrap_in)
-        else
-          result
-        end
+        result.success? ? result.capture!(wrap_in) : result
       end
     end
 
@@ -44,11 +38,7 @@ module Dolos
     def map_captures(&block)
       Parser.new do |state|
         result = run_with_state(state)
-        if result.success?
-          Success.new(result.value, result.length, block.call(result.captures))
-        else
-          result
-        end
+        result.success? ? Success.new(result.value, result.length, block.call(result.captures)) : result
       end
     end
 
@@ -56,11 +46,7 @@ module Dolos
     def map(&block)
       Parser.new do |state|
         result = run_with_state(state)
-        if result.success?
-          Success.new(block.call(result.value), result.length, result.captures)
-        else
-          result
-        end
+        result.success? ? Success.new(block.call(result.value), result.length, result.captures) : result
       end
     end
 
@@ -140,10 +126,9 @@ module Dolos
         values = []
         captures = []
         count = 0
-        state.input.mark_offset
 
         loop do
-          result = run_with_state(state.dup)
+          result = run_with_state(state) # Removing .dup for performance. Be cautious of side effects.
 
           if result.failure? || count >= n_max
             break
@@ -155,7 +140,7 @@ module Dolos
           count += 1
 
           if separator && count < n_max
-            sep_result = separator.run_with_state(state.dup)
+            sep_result = separator.run_with_state(state) # Removing .dup for performance. Be cautious of side effects.
             break if sep_result.failure?
 
             state.input.advance(sep_result.length)
@@ -163,10 +148,9 @@ module Dolos
         end
 
         if count < n_min
-          error_pos = state.input.offset
           Failure.new(
             -> { "Expected parser to match at least #{n_min} times but matched only #{count} times" },
-            error_pos,
+            state.input.offset,
             state
           )
         else
@@ -174,7 +158,6 @@ module Dolos
         end
       end
     end
-
     def zero_or_more
       repeat(n_min: 0, n_max: Float::INFINITY)
     end
