@@ -139,6 +139,9 @@ letter benchmark          2.964k (± 0.8%) i/s -     14.850k in   5.011192s
 Inline, use =~ instead of match
 nested json benchmark     8.426  (± 0.0%) i/s -     43.000  in   5.103600s
 letter benchmark          3.145k (± 0.7%) i/s -     15.810k in   5.027961s
+nested json 166kb bench   8.144  (± 0.0%) i/s -     41.000  in   5.039073s
+nested json 1mb bench     0.959  (± 0.0%) i/s -      5.000  in   5.230650s
+
 ```
 Its very slow, not ready for use yet. API is unstable is as well.
 

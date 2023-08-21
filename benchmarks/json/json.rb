@@ -45,14 +45,25 @@ end
 
 def json_parser = ws_rep0 >> value
 
-json_from_file = File.read('benchmarks/json/nested_json.json')
+json_from_file = File.read('benchmarks/json/nested_json_166.json')
 
 result = json_parser.run(json_from_file)
 puts result.success?
 
 Benchmark.ips do |x|
-  x.report('nested json benchmark') do
+  x.report('nested json 166kb benchmark') do
     json_parser.run(json_from_file)
-  end
+    end
+  x.compare!
+end
+
+json_from_file1m = File.read('benchmarks/json/nested_json_1m.json')
+result1m = json_parser.run(json_from_file1m)
+puts result1m.success?
+
+Benchmark.ips do |x|
+  x.report('nested json 1mb benchmark') do
+    json_parser.run(json_from_file1m)
+    end
   x.compare!
 end
