@@ -135,6 +135,10 @@ letter benchmark          2.891k (± 2.5%) i/s -     14.450k in   5.001678s
 No state.dup in combine:
 nested json benchmark     8.306  (± 0.0%) i/s -     42.000  in   5.056446s
 letter benchmark          2.964k (± 0.8%) i/s -     14.850k in   5.011192s
+
+Inline, use =~ instead of match
+nested json benchmark     8.426  (± 0.0%) i/s -     43.000  in   5.103600s
+letter benchmark          3.145k (± 0.7%) i/s -     15.810k in   5.027961s
 ```
 Its very slow, not ready for use yet. API is unstable is as well.
 
