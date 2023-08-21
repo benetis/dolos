@@ -3,9 +3,10 @@
 module Dolos
   module Parsers
     def string(str)
+      utf8_str = str.encode('UTF-8')
+
       Parser.new do |state|
         state.input.mark_offset
-        utf8_str = str.encode('UTF-8')
         if state.input.matches?(utf8_str)
           Success.new(utf8_str, str.bytesize)
         else
@@ -64,20 +65,20 @@ module Dolos
     # Example:
     #  char_in('abc').run('b') # => Success.new('b', 1)
     def char_in(characters_string)
-      characters_array = characters_string.chars
+      characters_set = characters_string.chars.to_set
 
       Parser.new do |state|
         state.input.mark_offset
 
         char, bytesize = state.input.peek(1)
 
-        if char && characters_array.include?(char)
+        if char && characters_set.include?(char)
           Success.new(char, bytesize)
         else
           advanced = state.input.offset
           state.input.rollback
           Failure.new(
-            -> { "Expected one of #{characters_array.inspect} but got #{char.inspect}" },
+            -> { "Expected one of #{characters_set.to_a.inspect} but got #{char.inspect}" },
             advanced,
             state
           )
@@ -90,12 +91,12 @@ module Dolos
         state.input.mark_offset
 
         buffer = String.new
-        loop do
-          char, bytesize = state.input.peek(1)
-          break if char.nil? || !predicate.call(char)
+        char, bytesize = state.input.peek(1)
 
+        while char && predicate.call(char)
           buffer << char
           state.input.advance(bytesize)
+          char, bytesize = state.input.peek(1)
         end
 
         if buffer.empty?
@@ -120,7 +121,7 @@ module Dolos
 
         recursive_parser.call.run_with_state(state).tap do |result|
           if result.failure?
-            error_msg = -> {"Error in recursive structure around position #{state.input.offset}: #{result.message}" }
+            error_msg = -> { "Error in recursive structure around position #{state.input.offset}: #{result.message}" }
             Failure.new(error_msg, state.input.offset, state)
           end
         end
@@ -129,7 +130,6 @@ module Dolos
       recursive_parser = -> { block.call(placeholder) }
       placeholder
     end
-
 
   end
 end
