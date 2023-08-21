@@ -46,7 +46,7 @@ RSpec.describe Dolos::Result do
       Failure: Expected parser to match at least 6 times but matched only 4 times
       ood errors
                 ^
-      Error Position: 47, Last Success Position: 0
+      Error Position: 47, Last Success Position: 47
       ERROR_MSG
 
       expect(result.inspect).to eq(error_msg)

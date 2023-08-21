@@ -22,12 +22,7 @@ module Dolos
 
     def matches?(utf8_str)
       read = io.read(utf8_str.bytesize)
-
-      if read.nil?
-        false
-      else
-        read.force_encoding('UTF-8') == utf8_str
-      end
+      !read.nil? && read.force_encoding('UTF-8') == utf8_str
     end
 
     def advance(bytesize)
@@ -61,8 +56,8 @@ module Dolos
       remaining_data = io.read
       io.seek(current_position)
 
-      if (match_data = remaining_data.match(/\A#{pattern}/))
-        matched_string = match_data[0]
+      if remaining_data =~ /\A#{pattern}/
+        matched_string = $&
         io.seek(current_position + matched_string.bytesize)
         return matched_string
       end
