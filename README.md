@@ -1,6 +1,8 @@
 # Dolos
 [![Gem version](https://badge.fury.io/rb/dolos.svg)](https://rubygems.org/gems/dolos)
 [![Build status](https://github.com/benetis/dolos/actions/workflows/ruby.yml/badge.svg)](https://github.com/benetis/dolos/actions)
+
+
 <img height="256" src="docs/dolos_stable_diff.png" width="256"/>
 
 
