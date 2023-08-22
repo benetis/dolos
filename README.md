@@ -118,33 +118,18 @@ pp result.captures
 ### Benchmarks
 `bundle exec ruby benchmarks/json/json.rb`
 ```
-Baseline before improvements:
-nested json benchmark     0.090  (± 0.0%) i/s -      0.500  in   5.000000s
-letter benchmark          1.710k (± 2.5%) i/s -      8.548k in   5.000000s
+Dolos
+nested json benchmark      8.426  (± 0.0%) i/s -     43.000  in   5.103600s
+letter benchmark           3.145k (± 0.7%) i/s -     15.810k in   5.027961s
+nested json 166KB bench    8.144  (± 0.0%) i/s -     41.000  in   5.039073s
+# Note: 25 times slower than Pure Ruby specialized json parser (below) if used to parse json
+nested json 1MB bench      0.959  (± 0.0%) i/s -     5.000  in    5.230650s
 
-Work in progress:
-
-After lazy errors:
-nested json benchmark     2.074  (± 0.0%) i/s -     10.417  in   5.000000s
-letter benchmark          2.137k (± 3.4%) i/s -     10.682k in   5.000000s
-
-After ws_rep0:
-nested json benchmark     7.819  (± 0.0%) i/s -     40.000  in   5.122156s
-letter benchmark          2.891k (± 2.5%) i/s -     14.450k in   5.001678s
-
-No state.dup in combine:
-nested json benchmark     8.306  (± 0.0%) i/s -     42.000  in   5.056446s
-letter benchmark          2.964k (± 0.8%) i/s -     14.850k in   5.011192s
-
-Inline, use =~ instead of match
-nested json benchmark     8.426  (± 0.0%) i/s -     43.000  in   5.103600s
-letter benchmark          3.145k (± 0.7%) i/s -     15.810k in   5.027961s
-nested json 166kb bench   8.144  (± 0.0%) i/s -     41.000  in   5.039073s
-nested json 1mb bench     0.959  (± 0.0%) i/s -      5.000  in   5.230650s
-
+Pure ruby (flori/json)
+nested json 1MB bench      24.213  (± 4.1%) i/s -    122.000  in   5.042309s
+Ruby native (C)
+nested json 1MB bench      309.519  (± 0.3%) i/s -   1.560k in    5.040164s
 ```
-Its very slow, not ready for use yet. API is unstable is as well.
-
 
 ### Contributing
 Contributors are welcome. Note: since library is not yet stable, I recommend getting in touch with me before starting to work on something.
