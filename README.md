@@ -3,7 +3,7 @@
 [![Build status](https://github.com/benetis/dolos/actions/workflows/ruby.yml/badge.svg)](https://github.com/benetis/dolos/actions)
 
 
-<img height="256" src="docs/dolos_stable_diff.png" width="256"/>
+<img height="256" src="docs/images/dolos_stable_diff.png" width="256"/>
 
 
 ### Disclaimer
