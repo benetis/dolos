@@ -131,7 +131,7 @@ Pure ruby (flori/json)
 nested json 1MB bench      24.213  (± 4.1%) i/s -    122.000  in   5.042309s
 nested json 166KB bench   188.070  (± 1.6%) i/s -    954.000  in   5.073788s
 Ruby native (C)
-nested json 1MB bench      309.519  (± 0.3%) i/s -   1.560k in    5.040164s
+nested json 1MB bench     309.519  (± 0.3%) i/s -    1.560k in    5.040164s
 ```
 
 ### Contributing

@@ -1,6 +1,10 @@
 module Dolos
   module Parsers
     def any_char: -> Parser[String]
+    def char_in: -> Parser[String]
+    def char_while : -> Parser[String]
+    def recursive: [A,B,C]() { (Parser[A]) -> Parser[B] } -> Parser[C]
+
     def regex: (Regexp) -> Parser[String]
     def string: (String)-> Parser[String]
   end

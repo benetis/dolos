@@ -112,7 +112,6 @@ module Dolos
       end
     end
 
-    # Unstable API
     def recursive(&block)
       recursive_parser = nil
 

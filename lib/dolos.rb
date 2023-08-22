@@ -10,9 +10,7 @@ module Dolos
   include Parsers
 
   class Parser
-
     attr_accessor :parser_proc
-
     def initialize(&block)
       @parser_proc = block
     end
@@ -34,7 +32,7 @@ module Dolos
       end
     end
 
-    # Will call block on captures
+    # Will call `map` on captures
     def map_captures(&block)
       Parser.new do |state|
         result = run_with_state(state)
@@ -184,7 +182,6 @@ module Dolos
     end
     alias_method :opt, :optional
 
-    # Unstable API
     # Used to declare lazy parser to avoid infinite loops in recursive parsers
     def lazy
       parser_memo = nil
@@ -193,12 +190,6 @@ module Dolos
         parser_memo ||= self
         parser_memo.run_with_state(state)
       end
-    end
-
-    private
-
-    def combine_and_discard_empty(*arrays)
-      arrays.compact.reject { |arr| arr.is_a?(Array) && arr.empty? }
     end
 
   end

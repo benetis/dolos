@@ -15,6 +15,11 @@ module Dolos
   end
 
   class Failure < Result[bot]
+    @message_proc: ^-> String
+    @message_evaluated: bool
+    @message_value: String
+    @state: ParserState
+
     attr_reader committed: bool
     attr_reader error_position: Integer
     attr_reader message: String
@@ -24,6 +29,8 @@ module Dolos
     def failure?: -> bool
 
     def map: [B](^(bot) -> B) -> Result[B]
+
+    def pretty_print: -> String
 
     def success?: -> bool
   end
