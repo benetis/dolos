@@ -1,3 +1,4 @@
-# Headline
+# Dolos
 
-> An awesome project.
+> Parser combinators for Ruby
+> Documentation: WIP
