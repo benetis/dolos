@@ -121,12 +121,15 @@ pp result.captures
 Dolos
 nested json benchmark      8.426  (± 0.0%) i/s -     43.000  in   5.103600s
 letter benchmark           3.145k (± 0.7%) i/s -     15.810k in   5.027961s
-nested json 166KB bench    8.144  (± 0.0%) i/s -     41.000  in   5.039073s
-# Note: 25 times slower than Pure Ruby specialized json parser (below) if used to parse json
+
+# Note: 23 times slower than Pure Ruby specialized json parser (below) if used to parse json
+nested json 166KB bench    8.189  (± 0.0%) i/s -     41.000  in   5.007158s
 nested json 1MB bench      0.959  (± 0.0%) i/s -     5.000  in    5.230650s
 
+-----------------------------------------------------------
 Pure ruby (flori/json)
 nested json 1MB bench      24.213  (± 4.1%) i/s -    122.000  in   5.042309s
+nested json 166KB bench   188.070  (± 1.6%) i/s -    954.000  in   5.073788s
 Ruby native (C)
 nested json 1MB bench      309.519  (± 0.3%) i/s -   1.560k in    5.040164s
 ```

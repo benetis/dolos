@@ -45,32 +45,37 @@ end
 
 def json_parser = ws_rep0 >> value
 
-# json_from_file = File.read('benchmarks/json/nested_json_166.json')
-#
-# result = json_parser.run(json_from_file)
-# puts result.success?
-#
-# Benchmark.ips do |x|
-#   x.report('nested json 166kb benchmark') do
-#     json_parser.run(json_from_file)
-#     end
-#   x.compare!
-# end
+require 'json/pure'
+
+
+json_from_file = File.read('benchmarks/json/nested_json_166.json')
+
+result = json_parser.run(json_from_file)
+puts result.success?
+
+Benchmark.ips do |x|
+  x.report('nested json 166kb benchmark') do
+    json_parser.run(json_from_file)
+  end
+  x.report('Pure ruby json: nested json 166kb benchmark') do
+    JSON.parse(json_from_file)
+  end
+  x.compare!
+end
 
 json_from_file1m = File.read('benchmarks/json/nested_json_1m.json')
 result1m = json_parser.run(json_from_file1m)
 puts result1m.success?
 
-require 'json/pure'
 # require 'json'
 
 Benchmark.ips do |x|
-  x.report('nested json 1mb benchmark') do
-    json_parser.run(json_from_file1m)
-  end
-  x.report('Ruby native: nested json 1mb benchmark') do
-    JSON.parse(json_from_file1m)
-  end
+  # x.report('nested json 1mb benchmark') do
+  #   json_parser.run(json_from_file1m)
+  # end
+  # x.report('Ruby native: nested json 1mb benchmark') do
+  #   JSON.parse(json_from_file1m)
+  # end
   # x.report('Pure ruby json: nested json 1mb benchmark') do
   #   JSON.parse(json_from_file1m)
   # end
