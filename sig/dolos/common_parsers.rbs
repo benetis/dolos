@@ -1,7 +1,16 @@
 module Dolos
   module CommonParsers
-    def ws: -> Parser[String]
+    def digit: -> Parser[String]
+    def digits: -> Parser[String]
 
+    def int: -> Parser[Integer]
+
+    def eol: -> Parser[String]
+
+    def ws: -> Parser[String]
     def ws_rep0: -> Parser[String]
+
+    def alpha: -> Parser[String]
+    def alphanum: -> Parser[String]
   end
 end

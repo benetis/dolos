@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require_relative 'dolos'
-require_relative 'dolos_common_parsers/arsers/common_parsers'
+require 'dolos'
+require 'dolos_common_parsers/common_parsers'
 
 include Dolos
 
