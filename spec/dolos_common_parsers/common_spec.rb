@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'dolos_common_parsers/common_parsers'
 
 RSpec.describe Dolos::Common do
   include Dolos

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dolos_common_parsers/common_parsers'
 RSpec.describe 'parse json' do
   include Dolos
   include Dolos::Common
