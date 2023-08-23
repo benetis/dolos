@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'dolos_common_parsers/common_parsers'
 
-RSpec.describe Dolos::CommonParsers do
+RSpec.describe Dolos::Common do
   include Dolos
-  include Dolos::CommonParsers
+  include Dolos::Common
 
   describe 'ws' do
     it 'parses whitespace' do

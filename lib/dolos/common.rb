@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 module Dolos
-  module CommonParsers
+  # Common parsers
+  # Separated from the main library to improve them later on
+  # These will change, new ones will be added. Once API stabilises, we will see what to do
+  # We have to be careful what is in the scope when we include this main module
+  # Probably a package of parsers following some RFC will be added as well.
+  # Keeping them separate for now
+  module Common
     def ws
       regex(/\s/)
     end

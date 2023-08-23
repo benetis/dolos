@@ -2,7 +2,7 @@
 require 'dolos_common_parsers/common_parsers'
 RSpec.describe Dolos do
   include Dolos
-  include Dolos::CommonParsers
+  include Dolos::Common
 
   describe 'zero_or_more' do
     context 'when success' do

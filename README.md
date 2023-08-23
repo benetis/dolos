@@ -43,13 +43,13 @@ require 'dolos_common_parsers/common_parsers'
 include Dolos
 # frozen_string_literal: true
 require_relative 'dolos'
-require_relative 'dolos_common_parsers/common_parsers'
+require_relative 'dolos_parsers/common_parsers'
 
 include Dolos
 
 # Include common parsers
 # In future this can be more structured, moved them to separate module to prevent breaking changes
-include Dolos::CommonParsers
+include Dolos::Common
 
 # Library usage example
 # Parse out a name and address from a letter

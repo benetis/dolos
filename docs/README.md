@@ -6,6 +6,7 @@ Dolos is parser combinator library for Ruby. It is inspired by FastParse and Sca
 ## What are parser combinators?
 Parser combinators are a way to build parsers from smaller parsers. For example, you can build a parser for a number from a parser for a digit.
 This is a very simple example, but it can be used to build more complex parsers.
+Parsers are lazy and only run when needed. This allows to build complex parsers before passing input to them.
 ```ruby
 hello = string("Hello")
 greeting = hello >> c(" ") >> string("Ruby developer!")

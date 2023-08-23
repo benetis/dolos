@@ -3,7 +3,7 @@
 require 'dolos_common_parsers/common_parsers'
 RSpec.describe Dolos do
   include Dolos
-  include Dolos::CommonParsers
+  include Dolos::Common
 
   describe 'recursive' do
 

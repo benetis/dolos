@@ -3,7 +3,7 @@
 require 'dolos_common_parsers/common_parsers'
 RSpec.describe 'should parse address on a letter' do
   include Dolos
-  include Dolos::CommonParsers
+  include Dolos::Common
 
   let(:letter) { <<-LETTER
         Mr. Vardeniui Pavardeniui

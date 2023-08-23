@@ -3,7 +3,7 @@
 require 'dolos_common_parsers/common_parsers'
 RSpec.describe 'parse json' do
   include Dolos
-  include Dolos::CommonParsers
+  include Dolos::Common
 
   describe 'json' do
     let(:ws_rep0) { ws.rep0 }

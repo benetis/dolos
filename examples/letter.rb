@@ -6,7 +6,7 @@ include Dolos
 
 # Include common parsers
 # In future this can be more structured, moved them to separate module to prevent breaking changes
-include Dolos::CommonParsers
+include Dolos::Common
 
 # Library usage example
 # Parse out a name and address from a letter
