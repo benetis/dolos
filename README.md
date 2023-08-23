@@ -38,12 +38,6 @@ greet_and_speak.run("Hello, Parsers are great!") # <Result::Success>
 
 ```ruby
 require 'dolos'
-require 'dolos_common_parsers/common_parsers'
-
-include Dolos
-# frozen_string_literal: true
-require_relative 'dolos'
-require_relative 'dolos_parsers/common_parsers'
 
 include Dolos
 

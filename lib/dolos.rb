@@ -5,6 +5,7 @@ require_relative "dolos/parser_state"
 require_relative "dolos/result"
 require_relative "dolos/string_io_wrapper"
 require_relative "dolos/parsers"
+require_relative 'parsers/common'
 
 module Dolos
   include Parsers
