@@ -30,7 +30,7 @@ RSpec.describe Dolos do
 
   describe 'map_captures' do
     it 'maps over parsers and converts them to ints' do
-      parser = (string("1") & string("2") & string("3")).capture!.flatten.map_captures { |value| value.map(&:to_i) }
+      parser = (string("1") & string("2") & string("3")).capture!.map_captures { |value| value.flatten.map(&:to_i) }
 
       result = parser.run("123")
       expect(result.captures).to eq([1, 2, 3])

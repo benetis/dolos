@@ -15,9 +15,13 @@ module Dolos
       @parser_proc = block
     end
 
+    # Run the parser with the given input
+    # Returns a Result<Success|Failure>
+    # string("hello").run("hello") => Success.new("hello", 5)
     def run(input)
       run_with_state(ParserState.new(input))
     end
+
 
     def run_with_state(state)
       result = @parser_proc.call(state)
@@ -25,6 +29,10 @@ module Dolos
       result
     end
 
+    # Capture the result of the parser
+    # p = string("hello").capture!
+    # p.run("hello").captures => ["hello"]
+    # Captures is a flat array of all captured values
     def capture!(wrap_in = nil)
       Parser.new do |state|
         result = run_with_state(state)
@@ -32,7 +40,10 @@ module Dolos
       end
     end
 
-    # Will call `map` on captures
+    # Map the captures of the parser
+    # p = string("hello").map_captures { |captures| captures.map(&:upcase) }
+    # p.run("hello") => Success.new("hello", 5, ["HELLO"])
+    # This only maps over captures, not the value
     def map_captures(&block)
       Parser.new do |state|
         result = run_with_state(state)
@@ -40,7 +51,9 @@ module Dolos
       end
     end
 
-    # Will call block on tuple of value
+    # Map the result of the parser
+    # p = string("hello").map { |s| s.upcase }
+    # p.run("hello") => Success.new("HELLO", 5)
     def map(&block)
       Parser.new do |state|
         result = run_with_state(state)
@@ -48,6 +61,7 @@ module Dolos
       end
     end
 
+    # Combine the result of the parser with another parser
     def combine(&block)
       Parser.new do |state|
         result = run_with_state(state)
@@ -62,12 +76,10 @@ module Dolos
       end
     end
 
-    def flatten
-      map_captures do |captures|
-        captures.flatten
-      end
-    end
-
+    # Combine the result of the parser with another parser
+    # Has an alias of `&`
+    # p = string("hello") & string("world")
+    # p.run("helloworld") => Success.new(["hello", "world"], 10)
     def product(other_parser)
       combine do |value1, capture1|
         other_parser.map do |value2|
@@ -79,6 +91,10 @@ module Dolos
     end
     alias_method :&, :product
 
+
+    # Combine the result of the parser with another parser
+    # Discards the result of the second parser
+    # p = string("hello") << string("world")
     def product_l(other_parser)
       combine do |value1, capture1|
         other_parser.map do |_|
@@ -89,6 +105,9 @@ module Dolos
       end
     end
 
+    # Combine the result of the parser with another parser
+    # Discards the result of the first parser
+    # p = string("hello") >> string("world")
     def product_r(other_parser)
       combine do |_, capture1|
         other_parser.map do |value2|
@@ -102,6 +121,10 @@ module Dolos
     alias_method :<<, :product_l
     alias_method :>>, :product_r
 
+    # Combine the result of the parser with another parser
+    # If the first parser fails, it will try the second parser
+    # p = string("hello") | string("world") | string("!")
+    # p.run("hello") => Success.new("hello", 5)
     def choice(other_parser)
       Parser.new do |state|
         result = run_with_state(state)
@@ -114,6 +137,9 @@ module Dolos
     end
     alias_method :|, :choice
 
+
+    # Repeat the parser n times
+    # Separator is optional, its another parser that will be run between each repetition
     # rep0         # 0 or more
     # rep          # 1 or more
     # rep(n = 2)   # exactly 2
@@ -156,11 +182,17 @@ module Dolos
         end
       end
     end
+
+    # Repeat the parser zero or more times
+    # c(" ").rep0.run("   ") => Success.new([" ", " ", " "], 3)
     def zero_or_more
       repeat(n_min: 0, n_max: Float::INFINITY)
     end
     alias_method :rep0, :zero_or_more
 
+    # Repeat the parser one or more times
+    # Same as rep0, but must match at least once
+    # c(" ").rep.run("A") => Failure.new("...")
     def one_or_more(exactly = nil)
       if exactly.nil?
         repeat(n_min: 1, n_max: Float::INFINITY)
@@ -170,6 +202,8 @@ module Dolos
     end
     alias_method :rep, :one_or_more
 
+    # Make parser optional
+    # c(" ").opt.run("A") => Success.new([], 0)
     def optional
       Parser.new do |state|
         result = run_with_state(state.dup)

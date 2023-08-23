@@ -2,6 +2,11 @@
 
 module Dolos
   module Parsers
+
+    # String parser
+    # Matches exactly the given string
+    # string('hello').run('hello') => Success.new('hello', 5)
+    # Alias: c, for case-sensitive. Ex: c('hello').run('hello') => Success.new('hello', 5)
     def string(str)
       utf8_str = str.encode('UTF-8')
 
@@ -21,9 +26,12 @@ module Dolos
         end
       end
     end
-
     alias_method :c, :string
 
+    # Regex parser
+    # Accepts a regex, matches the regex against the input
+    # parser = regex(/\d+/)
+    # result = parser.run('123') # => Success.new('123', 3)
     def regex(pattern)
       Parser.new do |state|
         state.input.mark_offset
@@ -41,6 +49,8 @@ module Dolos
       end
     end
 
+    # Matches any character
+    # any_char.run('a') # => Success.new('a', 1)
     def any_char
       Parser.new do |state|
         state.input.mark_offset
@@ -62,6 +72,7 @@ module Dolos
     end
 
     # Matches any character in a string
+    # Passed string can be imagined as a set of characters
     # Example:
     #  char_in('abc').run('b') # => Success.new('b', 1)
     def char_in(characters_string)
