@@ -47,6 +47,8 @@ Result can be either `Success` or `Failure`. It can be checked with `success?` o
 
 Success will also have `value` property which will contain the result of the parser. There is also `captures`, but 
 that's for later.
-
+```ruby
+hello.run("Hello").inspect # => Success(value: 'Hello',length: 5, capture: '[]')
+```
 
 Failure will have `inspect` method which will return a string with the error message. It will show error position as well.
