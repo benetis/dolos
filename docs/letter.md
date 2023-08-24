@@ -10,9 +10,6 @@ Also, this example uses `.capture!` instead of default `>>`, `<<`, `&` product o
 require 'dolos'
 
 include Dolos
-
-# Include common parsers
-# In future this can be more structured, moved them to separate module to prevent breaking changes
 include Dolos::Common
 
 # Library usage example
