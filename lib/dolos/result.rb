@@ -28,7 +28,7 @@ module Dolos
     end
 
     def inspect
-      "Success(value: '#{value}',length: #{length}, capture: '#{captures}')"
+      "Success(value: '#{value}',length: #{length}, captures: '#{captures}')"
     end
 
     def success?

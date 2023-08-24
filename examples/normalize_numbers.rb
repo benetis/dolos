@@ -36,7 +36,7 @@ all_numbers = lt_number.repeat(n_min: 1, separator: separator)
 
 result = all_numbers.run(input)
 
-puts result.inspect # => Success(value: '["61234567", "61234567", "61234567", "60123456"]',length: 0, capture: '[]')
+puts result.inspect # => Success(value: '["61234567", "61234567", "61234567", "60123456"]',length: 0, captures: '[]')
 
 # Let's say we now we need to support numbers with prefix +1
 # and after parsing, tag them as US numbers or LT numbers
@@ -58,7 +58,7 @@ number = us_number | lt_number
 all_numbers = number.repeat(n_min: 1, separator: separator)
 
 puts all_numbers.run(with_us_input).inspect
-# => Success(value: '[{:US=>"1234567890"}, {:LT=>"61234567"}, {:LT=>"61234567"}, {:LT=>"61234567"}, {:LT=>"60123456"}]',length: 0, capture: '[]')
+# => Success(value: '[{:US=>"1234567890"}, {:LT=>"61234567"}, {:LT=>"61234567"}, {:LT=>"61234567"}, {:LT=>"60123456"}]',length: 0, captures: '[]')
 
 
 
