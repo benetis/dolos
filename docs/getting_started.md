@@ -24,8 +24,9 @@ include Dolos
 include Dolos::Common # Common parsers
 ```
 
-### Basic parsers
+### 'One word' parser
 
+Let's say you want to validate if input is equal to a specific word.
 A simple parser which matches one word.
 
 ```ruby
@@ -41,14 +42,16 @@ hello.run("hello").success? # => failure
 
 After defining parser, it can be ran with `run('my-input')` method. It returns a `Result` object.
 
-### Result
+#### Result
 
 Result can be either `Success` or `Failure`. It can be checked with `success?` or `failure?` methods.
 
-Success will also have `value` property which will contain the result of the parser. There is also `captures`, but 
+Success will also have `value` property which will contain the result of the parser. There is also `captures`, but
 that's for later.
 ```ruby
 hello.run("Hello").inspect # => Success(value: 'Hello',length: 5, capture: '[]')
 ```
 
 Failure will have `inspect` method which will return a string with the error message. It will show error position as well.
+
+[Normalize numbers](normalize_numbers.md ':include')
