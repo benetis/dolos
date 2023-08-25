@@ -63,5 +63,3 @@ def temperature_humid_capture
   # Result is a flat captures array
   puts result.inspect # => Success(value: '[" ", "%"]',length: 1, captures: '[{:temp=>[21]}, {:humid=>[50]}]')
 end
-
-temperature_humid_capture

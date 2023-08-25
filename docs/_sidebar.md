@@ -5,7 +5,7 @@
   * [Quick start](getting_started.md#usage)
 * [Library API](parsers.md)
   * [WIP: Various char and string parsers]()
-  * [WIP: Map and capture parsers]()
+  * [Map and capture parsers](map_and_capture.md)
   * [Compose and product](compose_and_product.md)
   * [Choice and optional](choice_and_optional.md)
   * [WIP: Repeat]()
