@@ -6,7 +6,7 @@
 * [Library API](parsers.md)
   * [WIP: Various char and string parsers]()
   * [WIP: Map and capture parsers]()
-  * [WIP: Compose and product]()
+  * [Compose and product](compose_and_product.md)
   * [WIP: Choice and optional]()
   * [WIP: Repeat]()
   * [WIP: Recursive]()
