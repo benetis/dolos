@@ -4,7 +4,7 @@ The Dolos library allows for parser composition using product operators.
 These operators help you build more complex parsers by combining simpler ones.
 Understanding how these operators work is crucial to leverage the full power of the library.
 
-## `>>` Right Arrow: `product_r`
+## Right Arrow: `product_r` or `>>`
 
 The right arrow (>>) operator combines two parsers and discards the result of the first parser, keeping the result of the second parser.
 
@@ -19,7 +19,7 @@ puts result.inspect # => Success(value: '123', length: 8, captures: '[]')
 ```
 In this example, the combined_parser expects "Hello" followed by digits. It returns only the digits as its value.
 
-## `<<` Left Arrow: `product_l`
+## Left Arrow: `product_l` or `<<`
 
 The left arrow (<<) operator combines two parsers and discards the result of the second parser, keeping the result of the first one.
 
@@ -34,7 +34,7 @@ puts result.inspect # => Success(value: 'Hello', length: 8, captures: '[]')
 ```
 Here, the combined_parser still expects "Hello" followed by digits, but it returns only "Hello" as its value.
 
-## `&` Ampersand: `product`
+## Ampersand: `product` or `&`
 
 The ampersand (&) operator combines the results of both parsers into an array.
 

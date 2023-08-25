@@ -7,7 +7,7 @@
   * [WIP: Various char and string parsers]()
   * [WIP: Map and capture parsers]()
   * [Compose and product](compose_and_product.md)
-  * [WIP: Choice and optional]()
+  * [Choice and optional](choice_and_optional.md)
   * [WIP: Repeat]()
   * [WIP: Recursive]()
   * [WIP: Whitespace, digits and etc.]()
