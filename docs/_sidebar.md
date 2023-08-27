@@ -8,7 +8,7 @@
   * [Map and capture parsers](map_and_capture.md)
   * [Compose and product](compose_and_product.md)
   * [Choice and optional](choice_and_optional.md)
-  * [WIP: Repeat]()
+  * [Repeat](repeat.md)
   * [WIP: Recursive]()
   * [WIP: Whitespace, digits and etc.]()
   * [WIP: Errors and debugging]()
