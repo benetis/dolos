@@ -54,6 +54,23 @@ RSpec.describe Dolos do
         expect(result.captures).to eq(['world'])
       end
     end
+
+    context 'when paired with regex' do
+      it 'parses result of regex' do
+        parser = string('hello') | regex(/world/)
+        result = parser.run('world')
+
+        expect(result.value).to eq('world')
+      end
+
+      it 'captures group result of regex' do
+        parser = (regex(/hello/) | regex(/bcd/)).capture!
+
+        result = parser.run('bcd')
+
+        expect(result.captures).to eq(['bcd'])
+      end
+    end
   end
 
 end
