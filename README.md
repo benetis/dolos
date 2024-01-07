@@ -131,6 +131,20 @@ Ruby native (C)
 nested json 1MB bench     309.519  (± 0.3%) i/s -    1.560k in    5.040164s
 ```
 
+### Running documentation
+
+Docsify is used to generate documentation. To run it locally:
+
+Installation:
+```bash
+npm i docsify-cli -g
+```
+
+Run:
+```bash
+docsify serve docs
+```
+
 ### Contributing
 Contributors are welcome. Note: since library is not yet stable, I recommend getting in touch with me before starting to work on something.
 
