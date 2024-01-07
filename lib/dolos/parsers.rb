@@ -13,10 +13,10 @@ module Dolos
       Parser.new do |state|
         state.input.mark_offset
         if state.input.matches?(utf8_str)
-          Success.new(utf8_str, str.bytesize)
+          Success.new(utf8_str, utf8_str.size)
         else
           advanced = state.input.offset
-          got_error = state.input.io.string.byteslice(state.input.backup, advanced)
+          got_error = state.input.take(state.input.backup, advanced)
           state.input.rollback
           Failure.new(
             -> { "Expected #{str.inspect} but got #{got_error.inspect}" },
