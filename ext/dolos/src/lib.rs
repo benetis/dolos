@@ -8,17 +8,17 @@ use magnus::{method,
 
 
 #[derive(Default)]
-struct StringIO {
+struct StringIORust {
     cursor: Cursor<Vec<u8>>,
     offset: usize,
     backup: Option<usize>,
 }
 
 #[derive(Default)]
-#[magnus::wrap(class = "StringIO", free_immediately, size)]
-struct MutStringIO(RefCell<StringIO>);
+#[magnus::wrap(class = "StringIORust", free_immediately, size)]
+struct MutStringIORust(RefCell<StringIORust>);
 
-impl MutStringIO {
+impl MutStringIORust {
     fn initialize(&self, input: String) {
         let mut this = self.0.borrow_mut();
         this.offset = 0;
@@ -90,13 +90,13 @@ impl MutStringIO {
 
 #[magnus::init]
 fn init(ruby: &Ruby) -> Result<(), Error> {
-    let class = ruby.define_class("StringIO", ruby.class_object()).unwrap();
-    class.define_alloc_func::<MutStringIO>();
-    class.define_method("initialize", method!(MutStringIO::initialize, 1))?;
-    class.define_method("mark_offset", method!(MutStringIO::mark_offset, 0))?;
-    class.define_method("rollback", method!(MutStringIO::rollback, 0))?;
-    class.define_method("peek", method!(MutStringIO::peek_ruby, 1))?;
-    class.define_method("advance", method!(MutStringIO::advance, 1))?;
-    class.define_method("matches", method!(MutStringIO::matches, 1))?;
+    let class = ruby.define_class("StringIORust", ruby.class_object()).unwrap();
+    class.define_alloc_func::<MutStringIORust>();
+    class.define_method("initialize", method!(MutStringIORust::initialize, 1))?;
+    class.define_method("mark_offset", method!(MutStringIORust::mark_offset, 0))?;
+    class.define_method("rollback", method!(MutStringIORust::rollback, 0))?;
+    class.define_method("peek", method!(MutStringIORust::peek_ruby, 1))?;
+    class.define_method("advance", method!(MutStringIORust::advance, 1))?;
+    class.define_method("matches", method!(MutStringIORust::matches, 1))?;
     Ok(())
 }
