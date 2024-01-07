@@ -1,6 +1,8 @@
 module Dolos
+  type stringIORust = untyped
+
   class ParserState
-    attr_reader input: StringIOWrapper
+    attr_reader input: stringIORust
     attr_accessor last_success_position: Integer
 
     def initialize: (String) -> void

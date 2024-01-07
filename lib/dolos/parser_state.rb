@@ -6,7 +6,7 @@ module Dolos
     attr_accessor :last_success_position
 
     def initialize(input)
-      @input = StringIOWrapper.new(input)
+      @input = StringIORust.new(input)
       @last_success_position = 0
     end
   end
