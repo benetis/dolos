@@ -16,6 +16,9 @@ GEM
       ast (~> 2.4.1)
     rainbow (3.1.1)
     rake (13.0.6)
+    rake-compiler (1.2.5)
+      rake
+    rb_sys (0.9.86)
     regexp_parser (2.8.0)
     rexml (3.2.5)
     rspec (3.12.0)
@@ -56,6 +59,8 @@ DEPENDENCIES
   dolos!
   json_pure
   rake (~> 13.0)
+  rake-compiler
+  rb_sys (~> 0.9.86)
   rspec (~> 3.0)
   rubocop (~> 1.21)
 

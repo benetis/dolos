@@ -6,6 +6,7 @@ require_relative "dolos/result"
 require_relative "dolos/string_io_wrapper"
 require_relative "dolos/parsers"
 require_relative 'parsers/common'
+require_relative 'dolos/dolos'
 
 module Dolos
   include Parsers

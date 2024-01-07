@@ -10,3 +10,6 @@ gem "rspec", "~> 3.0"
 gem "rubocop", "~> 1.21"
 gem "benchmark-ips"
 gem "json_pure"
+
+gem "rake-compiler"
+gem "rb_sys", "~> 0.9.86"
