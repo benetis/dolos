@@ -3,10 +3,9 @@
 require 'benchmark/ips'
 require 'bundler/setup'
 require 'dolos'
-require 'dolos_common_parsers/common_parsers'
 
 include Dolos
-include Dolos::CommonParsers
+include Dolos::Common
 def comma = c(",")
 
 def string_literal = (c("\"") >> char_while(->(ch) { ch != "\"" }).opt << c("\""))
