@@ -1,9 +1,6 @@
 use std::cell::RefCell;
 use std::io::Read;
-use magnus::{method,
-             prelude::*,
-             Error, Ruby,
-};
+use magnus::{method, prelude::*, Error, Ruby, RRegexp};
 
 
 #[derive(Default)]
@@ -81,6 +78,27 @@ impl MutStringIORust {
         substring == utf8_str
     }
 
+    fn matches_regex(&self, pattern: RRegexp) -> String {
+        let this = self.0.borrow();
+
+        let current_pos = this.char_cursor;
+        let end_pos = this.chars.len();
+
+        if current_pos >= end_pos {
+            return "".to_string();
+        }
+
+        let substring: String = this.chars[current_pos..end_pos].iter().collect();
+        let re = regex::Regex::new(&pattern.to_string()).unwrap();
+
+        if let Some(captures) = re.captures(&substring) {
+            let matched = captures.get(0).unwrap().as_str();
+            matched.to_string()
+        } else {
+            "".to_string()
+        }
+    }
+
     fn offset(&self) -> usize {
         let this = self.0.borrow();
         this.char_cursor
@@ -110,7 +128,6 @@ impl MutStringIORust {
             0
         }
     }
-
 }
 
 #[magnus::init]
@@ -126,6 +143,7 @@ fn init(ruby: &Ruby) -> Result<(), Error> {
     class.define_method("offset", method!(MutStringIORust::offset, 0))?;
     class.define_method("take", method!(MutStringIORust::take_ruby, 2))?;
     class.define_method("backup", method!(MutStringIORust::backup_ruby, 0))?;
+    class.define_method("matches_regex?", method!(MutStringIORust::matches_regex, 1))?;
     Ok(())
 }
 
@@ -143,7 +161,7 @@ mod tests {
         assert_eq!(read_str, "Hello, ą");
         assert_eq!(len, 8);
 
-        let(read_again, len) = mut_string_io_rust.read(1).unwrap();
+        let (read_again, len) = mut_string_io_rust.read(1).unwrap();
 
         assert_eq!(read_again, "č");
         assert_eq!(len, 1);

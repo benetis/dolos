@@ -36,7 +36,7 @@ module Dolos
       Parser.new do |state|
         state.input.mark_offset
         if (matched_string = state.input.matches_regex?(pattern))
-          Success.new(matched_string, matched_string.bytesize)
+          Success.new(matched_string, matched_string.size)
         else
           advanced = state.input.offset
           state.input.rollback
